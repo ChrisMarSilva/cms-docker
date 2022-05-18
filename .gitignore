@@ -612,4 +612,5 @@ CMS Docker Teste Trace Elastic/elk-8-0-1 - Old/data/
 CMS Docker Teste MSG Apache Pulsar/pulsardata/
 CMS Docker Teste MSG Apache Pulsar/pulsarconf/
 *docker-compose-secret.yml
+/CMS Docker Teste BD MongoBD/docker-compose-secret.yml
 *.exe
