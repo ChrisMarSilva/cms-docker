@@ -1,0 +1,24 @@
+
+version: '3.9'
+
+services:
+
+  worker-php:
+    # image: 'php:8.0-alpine3.12'
+    # image: 'php:7.4-apache' 
+    # image: 'php:5.6-fpm-alpine'
+    # image: 'php:5.6-alpine'
+    # image: 'php:5.6-apache' 
+    container_name: worker-php
+    restart: always
+    ports:
+      - '80:80'
+    build: .
+    # build:
+    #   context: .
+    volumes:
+      - ./www:/var/www/html
+    # expose:
+    #   - "9000"
+    # command: docker-php-ext-install mysqli
+ 

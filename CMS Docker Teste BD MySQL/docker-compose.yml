@@ -1,0 +1,46 @@
+
+version: "3.9"
+
+networks:
+  mysql-net:
+    name: mysql-net
+    # external: true
+    # driver: bridge
+
+services:
+
+  wrk-mysql:
+    container_name: wrk-mysql
+    image: mysql:5.6
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: "tamonabo_BDCMSTamoNaBolsa"
+      MYSQL_ROOT_PASSWORD: "Chrs8723"
+      MYSQL_USER: "root"
+      MYSQL_PASSWORD: "Chrs8723"
+      MYSQL_PORT: 3306
+    volumes:
+      - ./lib/:/var/lib/mysql/
+    ports:
+      - "3306:3306"
+    networks:
+      - mysql-net
+    # ulimits:
+    #   memlock:
+    #     soft: -1
+    #     hard: -1
+    #mem_limit: 2g
+    #mem_reservation: 500M
+    #cpus: '2'
+    #cpus: '0.50'
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2g
+          #cpus: 0.5
+          #memory: 00M
+        reservations:
+          cpus: '0.50'
+          memory: 500M

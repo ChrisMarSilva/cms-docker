@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+  wrk-web-app:
+    image: cms-tnb-web-app:latest
+    container_name: wrk-web-app
+    build: web
+    restart: always
+    networks:
+      - cms-tnb-web-net-back
+      - cms-tnb-web-net-front
+    # volumes:
+    #   - web-data:/code/app/templates
+  wrk-web-nginx:
+    image: cms-tnb-web-nginx:latest
+    container_name: wrk-web-nginx
+    build: nginx
+    restart: always
+    ports:
+      - 81:80
+    environment:
+      - NGINX_HOST=foobar.com
+      - NGINX_PORT=80
+    depends_on:
+      - wrk-web-app
+    # volumes:
+    #   - .:/www/templates
+    #   - web-data:/code/app/templates
+    # volumes:
+    #   - ./nginx/nginx.conf:/tmp/nginx.conf
+    # - ./code:/usr/share/nginx/html
+    # - ./html:/myapp
+    # - ./site.conf:/etc/nginx/conf.d/site.conf
+    # - ./error.log:/var/log/nginx/error.log
+    # - ./nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - cms-tnb-web-net-front
+
+# volumes:
+#   db-data:
+#   web-data:
+
+networks:
+  cms-tnb-web-net-back:
+  cms-tnb-web-net-front:
+  cms-tnb-web-network:
+    driver: bridge

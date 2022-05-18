@@ -1,0 +1,12 @@
+
+version: '3.9'
+
+services:
+
+  app:
+    container_name: cms_python_task_container
+    build: .
+    volumes:
+      - .:/code
+    restart: always
+    

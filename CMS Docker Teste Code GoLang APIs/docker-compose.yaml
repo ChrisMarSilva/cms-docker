@@ -1,0 +1,88 @@
+version: "3.9"
+
+services:
+
+  wrk-golang-api-01-net:
+    image: "cms-golang-api-01-net:latest"
+    container_name: wrk-golang-api-01-net
+    build: 01.Net
+    restart: always
+    ports:
+      - "7001:7001"
+    networks:
+      - wrk-golang-api-network
+
+  wrk-golang-api-02-gorilla:
+    image: "cms-golang-api-02-gorilla:latest"
+    container_name: wrk-golang-api-02-gorilla
+    build: 02.Gorilla
+    restart: always
+    ports:
+      - "7002:7002"
+    networks:
+      - wrk-golang-api-network
+
+  wrk-golang-api-03-gin:
+    image: "cms-golang-api-03-gin:latest"
+    container_name: wrk-golang-api-03-gin
+    build: 03.Gin
+    restart: always
+    ports:
+      - "7003:7003"
+    networks:
+      - wrk-golang-api-network
+
+  wrk-golang-api-04-fiber:
+    image: "cms-golang-api-04-fiber:latest"
+    container_name: wrk-golang-api-04-fiber
+    build: 04.Fiber
+    restart: always
+    ports:
+      - "7004:7004"
+    networks:
+      - wrk-golang-api-network
+
+  wrk-golang-api-05-echo:
+    image: "cms-golang-api-05-echo:latest"
+    container_name: wrk-golang-api-05-echo
+    build: 05.Echo
+    restart: always
+    ports:
+      - "7005:7005"
+    networks:
+      - wrk-golang-api-network
+
+  wrk-golang-api-06-beego:
+    image: "cms-golang-api-06-beego:latest"
+    container_name: wrk-golang-api-06-beego
+    build: 06.Beego
+    restart: always
+    ports:
+      - "7006:7006"
+    networks:
+      - wrk-golang-api-network
+
+  wrk-golang-api-07-fasthttp:
+    image: "cms-golang-api-07-fasthttp:latest"
+    container_name: wrk-golang-api-07-fasthttp
+    build: 07.Fasthttp
+    restart: always
+    ports:
+      - "7007:7007"
+    networks:
+      - wrk-golang-api-network
+
+  wrk-golang-api-08-atreugo:
+    image: "cms-golang-api-08-atreugo:latest"
+    container_name: wrk-golang-api-08-atreugo
+    build: 08.Atreugo
+    restart: always
+    ports:
+      - "7008:7008"
+    networks:
+      - wrk-golang-api-network
+
+networks: 
+  wrk-golang-api-network:
+    driver: bridge
+

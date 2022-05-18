@@ -1,0 +1,14 @@
+
+cd "C:\Users\chris\Desktop\CMS Docker\CMS Docker Teste Python FastAPI"
+
+----------------------------------------------------
+
+kubectl config use-context docker-desktop
+kubectl config get-contexts
+
+docker-compose down
+docker-compose up -d --build
+
+
+----------------------------------------------------
+

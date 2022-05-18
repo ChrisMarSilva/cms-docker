@@ -1,0 +1,6 @@
+
+cd 'C:\Users\chris\Desktop\CMS Docker\CMS Docker Teste NATS'
+
+docker-compose down
+docker-compose up -d --build
+

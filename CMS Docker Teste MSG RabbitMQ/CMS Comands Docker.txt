@@ -1,0 +1,21 @@
+
+
+
+cd 'C:\Users\chris\Desktop\CMS Docker\CMS Docker Teste RabbitMQ'
+
+docker-compose down
+docker-compose up -d --build
+
+
+
+Queue
+
+python rabbitmqadmin declare queue --vhost=/ name=some_outgoing_queue durable=true
+
+Exchange
+
+python rabbitmqadmin declare exchange --vhost=/ name=some_exchange type=direct
+
+Binding
+
+python rabbitmqadmin --vhost=/ declare binding source="some_exchange" destination_type="queue" destination="some_outgoing_queue" routing_key="some_routing_key"

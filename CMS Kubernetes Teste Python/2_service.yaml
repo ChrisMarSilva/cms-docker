@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cms-python-kind-serve-service
+  #namespace: default
+spec:
+  selector:
+    app: cms-python-kind-serve
+  ports:
+  - protocol: "TCP"
+    name: http
+    port: 9999
+    targetPort: 8083
+  type: LoadBalancer
+  #type: ClusterIP

@@ -1,0 +1,32 @@
+
+
+
+https://localhost:9443
+
+docker volume create portainer_data
+
+
+Portainer Community 
+docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce:2.11.1
+
+Portainer Business
+docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ee:2.11.1   --- ERRO
+docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data cr.portainer.io/portainer/portainer-ce:2.9.3
+
+docker stop portainer
+docker rm portainer
+docker run -d -p 8000:8000 -p 9443:9443 --name=portainer --restart=always --pull=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data cr.portainer.io/portainer/portainer-ee:2.10.0
+
+Portainer Business License Key
+2-uAciQ9yD02OdCvhy/dXIzvVi0a7Co3uy3JpaV8oJMyoy+ULT0WWXG4hOUXaSPvClTTamCTKIMQ==
+
+
+admin
+admin123
+
+
+
+
+--------
+
+

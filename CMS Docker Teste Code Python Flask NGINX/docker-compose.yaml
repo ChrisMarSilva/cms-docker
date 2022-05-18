@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+  wrk-web-app:
+    image: cms-tnb-web-app:latest
+    container_name: wrk-web-app
+    build: web
+    restart: always
+    ports:
+      - 5000:5000
+    networks:
+      - cms-tnb-web-net-back
+      - cms-tnb-web-net-front
+    # healthcheck:
+    #   test: curl --fail -s http://localhost:5000/ || exit 1
+    #   interval: 1m30s
+    #   timeout: 10s
+    #   retries: 3
+
+networks:
+  cms-tnb-web-net-back:
+  cms-tnb-web-net-front:
+  cms-tnb-web-network:
+    driver: bridge

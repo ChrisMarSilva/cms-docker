@@ -1,0 +1,233 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: cms-tnb-job-cotacao-10
+  namespace: default
+  creationTimestamp: null
+spec:
+  schedule: "30 10 * * 1-5" 
+  timezone: "America/Sao_Paulo"
+  failedJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 3
+  concurrencyPolicy: Forbid # Allow # Forbid
+  jobTemplate:
+    metadata:
+      creationTimestamp: null
+    spec:
+      template:
+        metadata:
+          creationTimestamp: null
+        spec:
+          containers:
+          - name: cms-container-python-hello
+            image: chrismarsilva/cms_image_python_hello
+            imagePullPolicydo: IfNotPresent # Somente extraia a imagem se ela ainda não existir no nó. # Always Sempre puxe a imagem.
+          restartPolicy: OnFailure
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: cms-tnb-job-cotacao-11
+  namespace: default
+  creationTimestamp: null
+spec:
+  schedule: "30 11 * * 1-5" 
+  timezone: "America/Sao_Paulo"
+  failedJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 3
+  concurrencyPolicy: Forbid # Allow # Forbid
+  jobTemplate:
+    metadata:
+      creationTimestamp: null
+    spec:
+      template:
+        metadata:
+          creationTimestamp: null
+        spec:
+          containers:
+          - name: cms-container-python-hello
+            image: chrismarsilva/cms_image_python_hello
+            imagePullPolicydo: IfNotPresent # Somente extraia a imagem se ela ainda não existir no nó. # Always Sempre puxe a imagem.
+          restartPolicy: OnFailure
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: cms-tnb-job-cotacao-12
+  namespace: default
+  creationTimestamp: null
+spec:
+  schedule: "30 12 * * 1-5" 
+  timezone: "America/Sao_Paulo"
+  failedJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 3
+  concurrencyPolicy: Forbid # Allow # Forbid
+  jobTemplate:
+    metadata:
+      creationTimestamp: null
+    spec:
+      template:
+        metadata:
+          creationTimestamp: null
+        spec:
+          containers:
+          - name: cms-container-python-hello
+            image: chrismarsilva/cms_image_python_hello
+            imagePullPolicydo: IfNotPresent # Somente extraia a imagem se ela ainda não existir no nó. # Always Sempre puxe a imagem.
+          restartPolicy: OnFailure
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: cms-tnb-job-cotacao-13
+  namespace: default
+  creationTimestamp: null
+spec:
+  schedule: "30 13 * * 1-5" 
+  timezone: "America/Sao_Paulo"
+  failedJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 3
+  concurrencyPolicy: Forbid # Allow # Forbid
+  jobTemplate:
+    metadata:
+      creationTimestamp: null
+    spec:
+      template:
+        metadata:
+          creationTimestamp: null
+        spec:
+          containers:
+          - name: cms-container-python-hello
+            image: chrismarsilva/cms_image_python_hello
+            imagePullPolicydo: IfNotPresent # Somente extraia a imagem se ela ainda não existir no nó. # Always Sempre puxe a imagem.
+          restartPolicy: OnFailure
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: cms-tnb-job-cotacao-14
+  namespace: default
+  creationTimestamp: null
+spec:
+  schedule: "30 14 * * 1-5" 
+  timezone: "America/Sao_Paulo"
+  failedJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 3
+  concurrencyPolicy: Forbid # Allow # Forbid
+  jobTemplate:
+    metadata:
+      creationTimestamp: null
+    spec:
+      template:
+        metadata:
+          creationTimestamp: null
+        spec:
+          containers:
+          - name: cms-container-python-hello
+            image: chrismarsilva/cms_image_python_hello
+            imagePullPolicydo: IfNotPresent # Somente extraia a imagem se ela ainda não existir no nó. # Always Sempre puxe a imagem.
+          restartPolicy: OnFailure
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: cms-tnb-job-cotacao-15
+  namespace: default
+  creationTimestamp: null
+spec:
+  schedule: "30 15 * * 1-5" 
+  timezone: "America/Sao_Paulo"
+  failedJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 3
+  concurrencyPolicy: Forbid # Allow # Forbid
+  jobTemplate:
+    metadata:
+      creationTimestamp: null
+    spec:
+      template:
+        metadata:
+          creationTimestamp: null
+        spec:
+          containers:
+          - name: cms-container-python-hello
+            image: chrismarsilva/cms_image_python_hello
+            imagePullPolicydo: IfNotPresent # Somente extraia a imagem se ela ainda não existir no nó. # Always Sempre puxe a imagem.
+          restartPolicy: OnFailure
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: cms-tnb-job-cotacao-16
+  namespace: default
+  creationTimestamp: null
+spec:
+  schedule: "30 16 * * 1-5" 
+  timezone: "America/Sao_Paulo"
+  failedJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 3
+  concurrencyPolicy: Forbid # Allow # Forbid
+  jobTemplate:
+    metadata:
+      creationTimestamp: null
+    spec:
+      template:
+        metadata:
+          creationTimestamp: null
+        spec:
+          containers:
+          - name: cms-container-python-hello
+            image: chrismarsilva/cms_image_python_hello
+            imagePullPolicydo: IfNotPresent # Somente extraia a imagem se ela ainda não existir no nó. # Always Sempre puxe a imagem.
+          restartPolicy: OnFailure
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: cms-tnb-job-cotacao-17
+  namespace: default
+  creationTimestamp: null
+spec:
+  schedule: "30 17 * * 1-5" 
+  timezone: "America/Sao_Paulo"
+  failedJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 3
+  concurrencyPolicy: Forbid # Allow # Forbid
+  jobTemplate:
+    metadata:
+      creationTimestamp: null
+    spec:
+      template:
+        metadata:
+          creationTimestamp: null
+        spec:
+          containers:
+          - name: cms-container-python-hello
+            image: chrismarsilva/cms_image_python_hello
+            imagePullPolicydo: IfNotPresent # Somente extraia a imagem se ela ainda não existir no nó. # Always Sempre puxe a imagem.
+          restartPolicy: OnFailure
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: cms-tnb-job-cotacao-18
+  namespace: default
+  creationTimestamp: null
+spec:
+  schedule: "45 18 * * 1-5" 
+  timezone: "America/Sao_Paulo"
+  failedJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 3
+  concurrencyPolicy: Forbid # Allow # Forbid
+  jobTemplate:
+    metadata:
+      creationTimestamp: null
+    spec:
+      template:
+        metadata:
+          creationTimestamp: null
+        spec:
+          containers:
+          - name: cms-container-python-hello
+            image: chrismarsilva/cms_image_python_hello
+            imagePullPolicydo: IfNotPresent # Somente extraia a imagem se ela ainda não existir no nó. # Always Sempre puxe a imagem.
+          restartPolicy: OnFailure

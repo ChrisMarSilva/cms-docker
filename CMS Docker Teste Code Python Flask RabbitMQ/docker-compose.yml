@@ -1,0 +1,84 @@
+
+version: '3.9'
+
+services:
+
+  worker-producer:
+    container_name: worker-producer
+    image: cms_docker_image_producer
+    build: producer
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+    volumes:
+      - .:/code
+    ports:
+      - "5000:5000"
+    environment:
+      - TZ: "America/Sao_Paulo"
+    restart: always # on-failure # always
+    depends_on:
+      - rabbit
+    links:
+      - rabbit
+    networks:
+      - network
+
+  worker-consumer:
+    container_name: worker-consumer
+    image: cms_docker_image_consumer
+    build: consumer
+    volumes:
+      - .:/code
+    ports:
+      - "5001:5001"
+    environment:
+      - TZ: "America/Sao_Paulo"
+    restart: always # on-failure # always
+    depends_on:
+      - rabbit
+    links:
+      - rabbit
+    networks:
+      - network
+
+  worker-redis:
+    image: redis:latest
+    hostname: cms_python_flask_redis
+    container_name: cms_python_flask_redis
+    restart: always # on-failure # always
+
+  worker-rabbit:
+    hostname: cms_python_flask_rabbitmq
+    image: rabbitmq:latest-alpine
+    # image: rabbitmq:3-management-alpine
+    container_name: cms_python_flask_rabbitmq
+    command: rabbitmq-server
+    restart: always # on-failure # always
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "5672" ]
+      interval: 3s
+      timeout: 10s
+      retries: 3
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    expose:
+      - 15672
+      - 5672
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    networks:
+      - rabbitNet
+
+networks:
+
+  network: {}
+
+  rabbitNet:
+    external:
+      name: rabbitNetwork
+
+  rabbitNet2:
+    external: true

@@ -1,0 +1,157 @@
+version: '3.7'
+
+# volumes:
+#   elasticsearch:
+#     driver: local
+#   kibanadata:
+#     driver: local
+#   logstash:
+#     driver: local
+
+services:
+
+  # #######################################
+  # # Elasticsearch: The log database
+  # #######################################
+  elasticsearch:
+    container_name: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
+    restart: always
+    ports:
+      - ${ES_PORT}:9200
+      - 9300:9300
+    environment:
+      - "discovery.type=single-node"
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=false
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - xpack.license.self_generated.type=${LICENSE}
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g" #- "ES_JAVA_OPTS=-Xmx256m -Xms256m"
+      #- "xpack.http.max_content_length=400" 400mb
+      #- "xpack.indexing_pressure.memory.limit=50" #50%
+    mem_limit: 4g # ${MEM_LIMIT}
+    deploy:
+      resources:
+        limits:
+          memory: 4g 
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s --cacert config/certs/ca/ca.crt https://localhost:9200 | grep -q 'missing authentication credentials'"]
+      interval: 10s
+      timeout: 10s
+      retries: 120
+    volumes:
+      - ./data/elasticsearch:/usr/share/elasticsearch/data
+      #- elasticsearch:/usr/share/elasticsearch/data
+
+  # #######################################
+  # # Kibana: The log dashboard
+  # #######################################
+  kibana:
+    container_name: kibana
+    image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
+    restart: always
+    ports:
+      - ${KIBANA_PORT}:5601
+    environment:
+      - SERVERNAME=kibana
+      # - SERVERPORT=${KIBANA_PORT}
+      # - SERVERHOST=0.0.0.0
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:${ES_PORT}
+      #- ELASTICSEARCH_USERNAME=kibana_system
+      #- ELASTICSEARCH_USERNAME=elastic
+      # - ELASTICSEARCH_PORT=${ES_PORT}
+      # - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
+      # - KIBANA_SYSTEM_PASSWORD=${KIBANA_PASSWORD}
+    mem_limit: 1g # ${MEM_LIMIT}
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -I http://localhost:5601 | grep -q 'HTTP/1.1 302 Found'"]
+      interval: 10s
+      timeout: 10s
+      retries: 120
+    # links:
+    #   - elasticsearch
+    depends_on:
+      - elasticsearch
+    volumes:
+      - ./data/kibanadata:/usr/share/kibana/data
+      #- kibanadata:/usr/share/kibana/data
+
+  #######################################
+  # Logstash: The log ETL
+  #######################################
+  logstash:
+    container_name: logstash
+    image: docker.elastic.co/logstash/logstash:${STACK_VERSION}
+    restart: always
+    environment:
+      - ES_HOST=elasticsearch
+      - ES_PORT=${ES_PORT}
+      - LOGSTASH_INTERNAL_PASSWORD=${LOGSTAS_PASSWORD}
+      - "LS_JAVA_OPTS=-Xmx1g -Xms1g"  # - "LS_JAVA_OPTS=-Xms512m -Xmx512m"
+    mem_limit: 2g #${MEM_LIMIT}
+    # links:
+    #   - elasticsearch
+    depends_on:
+      - elasticsearch
+    ports:
+      #- "5000:5000"
+      - "5000:5000/tcp"
+      - "5000:5000/udp"
+      - "9600:9600"
+      - "5044:5044"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./data/logstash:/usr/share/logstash/pipeline
+      #- logstash:/usr/share/logstash/pipeline
+
+  #######################################
+  # apmserver: Agent
+  #######################################
+  apmserver:
+    container_name: apmserver
+    image: docker.elastic.co/apm/apm-server:7.15.2
+    restart: always
+    cap_add: ["CHOWN", "DAC_OVERRIDE", "SETGID", "SETUID"]
+    cap_drop: ["ALL"]
+    ports:
+      - 8200:8200
+    user: root 
+    command: >
+        apm-server -e
+          -E apm-server.rum.enabled=true
+          -E setup.kibana.host=kibana:5601
+          -E setup.template.settings.index.number_of_replicas=0
+          -E apm-server.kibana.enabled=true
+          -E apm-server.kibana.host=kibana:5601
+          -E output.elasticsearch.hosts=["elasticsearch:9200"]
+          -E strict.perms=false
+    depends_on:
+      - elasticsearch
+      - kibana
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    healthcheck:
+      interval: 10s
+      retries: 12
+      test: curl --write-out 'HTTP %{http_code}' --fail --silent --output /dev/null http://localhost:8200/
+    # volumes:
+    #   - ./data/apmserver/apm-server.docker.yml:/usr/share/apm-server/apm-server.yml
+      #- ./data/apmserver/apm-server.docker.yml:/usr/share/apm-server/apm-server.yml:ro
+      # - type: bind
+      #   source: ./data/apmserver/apm-server.docker.yml
+      #   target: /usr/share/apm-server/apm-server.yml
+      #   read_only: true
+

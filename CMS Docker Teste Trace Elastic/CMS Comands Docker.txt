@@ -1,0 +1,41 @@
+
+
+cd 'C:\Users\chris\Desktop\CMS Docker\CMS Docker Teste Elastic'
+
+docker-compose down
+docker-compose up -d --build
+docker-compose up -d 
+
+
+
+docker pull docker.elastic.co/elasticsearch/elasticsearch:7.16.3
+docker run -p 127.0.0.1:9200:9200 -p 127.0.0.1:9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.16.3
+
+
+NAO
+docker run - link {Container ID do Elasticsearch}:elasticsearch -p 5601:5601 docker.elastic.co/kibana/kibana:7.7.0
+
+---- 
+
+docker pull docker.elastic.co/elasticsearch/elasticsearch:7.16.3
+docker pull docker.elastic.co/kibana/kibana:7.16.3
+
+docker network create elastic
+docker run --name es01-test --net elastic -p 127.0.0.1:9200:9200 -p 127.0.0.1:9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.16.3
+docker run --name kib01-test --net elastic -p 127.0.0.1:5601:5601 -e "ELASTICSEARCH_HOSTS=http://es01-test:9200" docker.elastic.co/kibana/kibana:7.16.3
+
+
+------------
+
+
+
+kibana  
+  http://localhost:5601
+  
+elasticsearch 
+  http://localhost:9200 
+  http://localhost:9300
+
+logstash 
+  http://localhost:5000 
+  http://localhost:9600

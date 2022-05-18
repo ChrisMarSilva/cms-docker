@@ -1,0 +1,10 @@
+
+cd "C:\Users\chris\Desktop\CMS Docker\CMS Docker Teste Code NGINX"
+https://www.youtube.com/watch?v=bFZurhL14LA
+
+
+docker-compose down
+docker-compose up -d --build
+
+----------------------------------------------------
+

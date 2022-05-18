@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  wrk-cotacao-golang:
+    image: "cms-tnb-cotacao-golang:latest"
+    container_name: wrk-cotacao-golang
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: on-failure
+    volumes:
+      - .:/app

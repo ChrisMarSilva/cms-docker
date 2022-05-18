@@ -1,0 +1,133 @@
+
+
+docker-compose down
+docker-compose up -d --build
+
+
+------------
+
+docker network create elastic
+
+docker pull docker.elastic.co/elasticsearch/elasticsearch:8.0.1
+docker run --name es01 --net elastic -p 9200:9200 -p 9300:9300 -it docker.elastic.co/elasticsearch/elasticsearch:8.0.1
+docker run --name es01 --net elastic -p 9200:9200 -p 9300:9300 -t docker.elastic.co/elasticsearch/elasticsearch:8.0.1
+
+docker pull docker.elastic.co/kibana/kibana:8.0.1
+docker run --name kib01 --net elastic -p 5601:5601 docker.elastic.co/kibana/kibana:8.0.1
+
+
+docker network rm elastic
+docker rm es01
+docker rm kib01
+
+
+
+------------
+
+
+kibana  
+  http://localhost:5601
+  
+elasticsearch 
+  http://localhost:9200 
+  http://localhost:9300
+
+logstash 
+  http://localhost:5000 
+  http://localhost:9600
+
+
+------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+
+Aula - Elasticsearch 7 e Elastic Stack: o Curso Completo!
+
+-- elasticsearch esta no ar
+curl -XGET 127.0.0.1:9200
+
+-- Baixar o Schema 
+wget http://media.sundog-soft.com/es7/shakes-mapping.json  
+
+-- Importar Schema
+curl -H "Content-Type: application/json" -XPUT 127.0.0.1:9200/shakespeare --data-binary @shakes-mapping.json 
+curl -H "Content-Type: application/json" -XPUT localhost:9200/shakespeare --data-binary @shakes-mapping.json -- ok
+
+-- Baixar shakespeare
+wget http://media.sundog-soft.com/es7/shakespeare_7.0.json - ok
+
+-- Importar index shakespeare
+curl -H "Content-Type: application/json" -XPOST http://localhost:9200/shakespeare/_bulk?pretty --data-binary @shakespeare_7.0.json
+
+-- Consulta ao index shakespeare
+curl -H "Content-Type: application/json" -XGET 'localhost:9200/shakespeare/_search?pretty' -d '{"query": {"match_phrase": {"text_entry": "to be or not to be"}}}'
+curl -H "Content-Type: application/json" -XGET '127.0.0.1:9200/shakespeare/_search?pretty' -d '{"query": {"match_phrase": {"text_entry": "Juliet is the sun."}}}'
+
+------------
+
+
+wget https://artifacts.elastic.co/downloads/beats/elastic-agent/elastic-agent-8.0.1-windows-x86_64.zip -OutFile elastic-agent-8.0.1-windows-x86_64.zip
+Expand-Archive .\elastic-agent-8.0.1-windows-x86_64.zip
+.\elastic-agent.exe install -f --url=localhost:9200 --enrollment-token=<enrollment_token>
+
+
+
+curl -H "Content-Type: application/json" -XGET  'localhost:9200/shakespeare/_search?pretty' -d '{"query": {"match_phrase": {"text_entry": "xxxxxx"}}}'
+curl -H "Content-Type: application/json" -XPOST 'localhost:9200/movies' -d '{ "doc": {"title":"new"} }
+curl -H "Content-Type: application/json" -XPUT  'localhost:9200/movies' -d '{ "mappings" :{"movie":{"_all":{"enabled":false},"properties":{"year":{"type":"date"}}}}}'
+
+
+
+
+
+
+------------
+
+Create a Mapping for MovieLens
+curl -XPUT 127.0.0.1:9200/movies -d '{ "mappings" :{"movie":{"_all":{"enabled":false},"properties":{"year":{"type":"date"}}}}}'
+
+test
+curl -XGET 127.0.0.1:9200/movies/_mapping/movie?pretty
+
+Import a Single Movie via JSON REST
+curl -XPUT localhost:9200/movies/movie/10999 -d '{ "genre":["MAX"],"title":"inter","year":2000}'
+curl -XGET localhost:9200/movies/movie/_search?pretty
+
+Insert Many Movies at Once
+wget http://media.sundog-soft.com/es/movies.json
+curl -XPUT localhost:9200/_bulk?pretty --data-binary @movies.json
+
+Updating Data in Elasticsearch
+curl -XPOST localhost:9200/movies/movie/10999/_update -d '{"doc":{"title":"new"}}'
+
+Deleting Data in Elasticsearch
+curl -XGET localhost:9200/movies/_search?q=Dark
+
+Dealing With Concurrently
+curl -XPUT localhost:9200/movies/movie/10999?version=3 -d '{"genre":["MIN"],"year":2018}'
+
+update with retry_on_confilct
+curl -XPUT localhost:9200/movies/movie/10999/_update?retry_on_conflict -d '{"doc":{"genre":["MIN"],"year":2018}}'
+
+Using Analyzers and Tokenizers
+curl -XGET 127.0.0.1:9200/movies/movie/_search?pretty -d '{"query":{"match":{"title":"Star Trek"}}}'
+
+recreate mapping
+curl -XPUT 127.0.0.1:9200/movies -d '{ "mappings" :{"movie":{"_all":{"enabled":false},"properties":{"year":{"type":"date"},"genre":{"type":"string","index":"not_analyzed"}}}}'  # must exact match, case sensitive
+
+
+Pagination
+curl -XGET '127.0.0.1:9200/movies/movie/_search?size=2&from=2&pretty'
+
+Sorting
+-d '{"mappings":"movie":{"_all":{"enabled":false},"properties":{"title":{"type":"string","fields":{"raw":{"type":"string","index":"not_analyzed"}}}}}}}'
+
+Using Filters
+'{"query":{"bool":{"must":{"match":{"genre":""}},"must_not":{"match":{"title":"trek"}},"filter":{"range":{"year":{"gte":2000,"lt":2011}}}}}}'
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+
+ 

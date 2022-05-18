@@ -1,0 +1,103 @@
+version: "3.9" 
+
+networks:
+  kong-net:
+    external: true
+    name: kong-net
+    #driver: bridge
+
+services:
+
+  #######################################
+  # Services: A1
+  #######################################
+  servicea:
+    container_name: servicea
+    image: wesleywillians/kong-service:latest
+    environment:
+      PORT: ":8081"
+      CONTENT: "<h1>Service A</h1>"
+    networks:
+      - kong-net
+
+  #######################################
+  # Services: A2
+  #######################################
+  servicea2:
+    container_name: servicea2
+    image: wesleywillians/kong-service:latest
+    environment:
+      PORT: ":7071"
+      CONTENT: "<h1>Service A2</h1>"
+    networks:
+      - kong-net
+
+  #######################################
+  # Services: B
+  #######################################
+  serviceb:
+    container_name: serviceb
+    image: wesleywillians/kong-service:latest
+    environment:
+      PORT: ":8082"
+      CONTENT: "<h1>Service b</h1>"
+    networks:
+      - kong-net
+
+  #######################################
+  # Services: C
+  #######################################
+  servicec:
+    container_name: servicec
+    image: wesleywillians/kong-service:latest
+    environment:
+      PORT: ":8083"
+      CONTENT: "<h1>Service C</h1>"
+    networks:
+      - kong-net
+
+  #######################################
+  # Services: Go1
+  #######################################
+  servicego:
+    container_name: servicego
+    image: wesleywillians/kong-service:latest
+    environment:
+      PORT: ":3000"
+      CONTENT: "<h1>Service Cliente</h1>"
+    networks:
+      - kong-net
+
+  #######################################
+  # Services: Go2
+  #######################################
+  servicego2:
+    container_name: servicego2
+    image: wesleywillians/kong-service:latest
+    environment:
+      PORT: ":3002"
+      CONTENT: "<h1>Service Cliente 2</h1>"
+    networks:
+      - kong-net
+
+  #######################################
+  # Services: Go3
+  #######################################
+  servicego3:
+    container_name: servicego3
+    image: wesleywillians/kong-service:latest
+    environment:
+      PORT: ":3003"
+      CONTENT: "<h1>Service Cliente 3</h1>"
+    networks:
+      - kong-net
+
+  #######################################
+  # Services: Ap
+  #######################################
+  serviceapp:
+    container_name: serviceapp
+    build: .
+    networks:
+      - kong-net
+    restart: on-failure

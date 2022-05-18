@@ -1,0 +1,17 @@
+version: '3.9'
+services:
+  worker-web-fast-api:
+    container_name: worker-web-fast-api
+    image: cms_docker_image_web_fast_api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:80"
+    volumes:
+      - .:/usr/src/app
+      - .:/usr/src/app/templates
+      - .:/usr/src/app/static
+    restart: always
+    # command: uvicorn src.app:app --reload --workers 1 --host 0.0.0.0 --port 80
+    # command: uvicorn app.main:app --host 0.0.0.0

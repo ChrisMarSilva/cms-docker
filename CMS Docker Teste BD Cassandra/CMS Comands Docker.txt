@@ -1,0 +1,15 @@
+
+
+docker-compose down
+docker-compose up -d --build
+docker-compose up -d
+
+
+docker pull cassandra
+docker pull cassandra:4.0.3
+docker pull cassandra:latest
+
+ docker run -d --name my-cassandra -p 9042:9042 -v ~/apps/cassandra:/var/lib/cassandra -e CASSANDRA_CLUSTER_NAME=citizix cassandra:4.0
+
+
+

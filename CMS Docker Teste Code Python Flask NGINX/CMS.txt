@@ -1,0 +1,42 @@
+
+cd "C:\Users\chris\Desktop\CMS Docker\CMS Docker Teste Python Flask NGINX"
+
+----------------------------------------------------
+
+kubectl config use-context docker-desktop
+kubectl config get-contexts
+
+docker-compose down
+docker-compose up -d --build
+
+----------------------------------------------------
+
+kubectl config use-context docker-desktop
+kubectl config get-contexts
+
+docker tag cms-tnb-web-app:latest chrismarsilva/cms-tnb-web-app
+docker tag cms-tnb-web-nginx:latest chrismarsilva/cms-tnb-web-nginx
+
+docker push chrismarsilva/cms-tnb-web-app:latest
+docker push chrismarsilva/cms-tnb-web-nginx:latest
+
+----------------------------------------------------
+
+kubectl config use-context do-nyc3-cms-tnb-cluster
+kubectl config use-context docker-desktop
+kubectl config get-contexts
+
+kubectl get all
+kubectl get services
+kubectl get ingress
+kubectl delete service worker-rabbit
+kubectl delete service wrk-web-app
+kubectl delete service wrk-web-nginx
+kubectl delete deployment worker-rabbit
+kubectl delete deployment wrk-web-app
+kubectl delete deployment wrk-web-nginx
+
+kubectl apply -f deployment.yaml
+
+----------------------------------------------------
+

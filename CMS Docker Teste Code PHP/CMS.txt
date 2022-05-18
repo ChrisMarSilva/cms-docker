@@ -1,0 +1,70 @@
+
+cd 'C:\Users\chris\Desktop\CMS Docker\CMS Docker Teste PHP'
+
+docker system prune --all -f
+docker-compose up -d --build --force-recreate
+
+docker-compose down
+docker-compose up -d --build
+
+------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+
+CMS - Ajuste 20210306 - Gabriel  - evabella 
+
+Versão do Apache	2.4.46
+Versão do PHP	5.6.40
+Versão do MySQL	10.3.27-MariaDB-cll-lve
+Arquitetura	x86_64
+Sistema operacional	linux
+
+Servidor:
+    site: https://www.seguro.targethost.com.br/clientarea.php
+    usuario: tecnologia@evabella.com.br
+    senha: H8fx5sX8AOva
+
+FTP
+    Servidor: ftp.evabella.com.br
+    FTP & porta FTPS explícita:  21
+    usuario: tecnologiaevabella@evabella.com.br
+    senha: #tecnologia@evabella
+
+Banco de Dados
+    DB_NAME wp_evabella
+    DB_USER agenciaz9
+    DB_PASSWORD 98sDasuiTErpjv1D
+
+
+$link = mysql_connect('localhost', 'evabella_usr', 'QdlGmqyKquP2');  
+
+
+nspro44.hostgator.com.br
+https://sh-pro44.hostgator.com.br:2083/cpsess1461175720/3rdparty/phpMyAdmin/index.php
+
+https://cp20.nspmanaged.com:2083/cpsess4039027139/frontend/paper_lantern/index.html
+
+
+4hr - calcular cep Api correios - cep 16402-128  - cep 13960-000
+1hr - mudar a foto pela cor  - https://www.evabella.com.br/produto/blusa-alanna/
+1hr - aulterar o menu - para ser padrao - https://www.evabella.com.br/categoria-produto/novidades/
+1hr - forma de pagamento - deixar coloridos
+1hr - mudar a cor para branco e dourado listrado - https://www.evabella.com.br/produto/short-ana-julia/
+1hr - ao clicar no filtro - nao deve desaparecer - https://www.evabella.com.br/categoria-produto/transicao-inverno-2021/
+---------------------------------
+9hr * 50 = 450,00
+
+
+2021-03-06 13:00 - Recebi o logi e Senha do Servidor do Codigo Fonte
+2021-03-06 15:00 - Inicio da Analise
+
+Portanto, para saber se um site é feito no WordPress:
+
+Acesse o código fonte de qualquer página dele.
+Procure pelas strings “wp-content” e “wp-includes”
+Se encontrar estas strings no header da página, então o site foi feito com WordPress.
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------

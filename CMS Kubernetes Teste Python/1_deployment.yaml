@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cms-server-python-hello
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cms-server-python-hello
+  template:
+    metadata:
+      labels:
+        app: cms-server-python-hello
+    spec:
+      containers:
+      - name: cms-server-python-hello
+        image: chrismarsilva/cms_image_python_hello
+        imagePullPolicy: Always # Never # Always

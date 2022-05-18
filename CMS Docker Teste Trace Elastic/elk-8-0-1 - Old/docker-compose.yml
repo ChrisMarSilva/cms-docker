@@ -1,0 +1,129 @@
+version: "3.9" 
+
+networks:
+  kong-net:
+    external: true
+
+services:
+
+  # #######################################
+  # # Elasticsearch: The log database
+  # #######################################
+  elasticsearch:
+    container_name: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.0.1
+    restart: always
+    environment:
+      - "discovery.type=single-node"
+      - xpack.security.enabled=false
+      - ELASTIC_PASSWORD=changeme
+      - ELASTIC_USERNAME=elastic
+      #- bootstrap.memory_lock=true
+      #     xpack.monitoring.enabled: "true"
+      #     xpack.graph.enabled: false
+      #     xpack.ml.enabled: false
+      #     xpack.watcher.enabled: false
+      #     xpack.security.http.ssl.enabled: false
+      # - ES_JAVA_OPTS="-Xms512m -Xmx512m"
+    networks:
+      - kong-net
+    ports:
+      - 9200:9200
+      - 9300:9300
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    # volumes:
+    #   - ./esdata:/usr/share/elasticsearch/data
+    #     #- ./esdata:/usr/share/elasticsearch/database
+    #     #- ./esetc:/usr/share/elasticsearch/config 
+    # healthcheck:
+    #   test: ["CMD-SHELL", "curl -s --cacert config/certs/ca/ca.crt https://localhost:9200 | grep -q 'missing authentication credentials'"]
+    #   interval: 10s
+    #   timeout: 10s
+    #   retries: 120
+
+  # #######################################
+  # # Kibana: The log dashboard
+  # #######################################
+  kibana:
+    container_name: kibana
+    image: docker.elastic.co/kibana/kibana:8.0.1
+    restart: always
+    environment:
+      - KIBANA_SYSTEM_PASSWORD=changeme
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      # ELASTICSEARCH_URL: http://elasticsearch:9200
+      #     ELASTICSEARCH_USERNAME: elastic
+      #     ELASTICSEARCH_PASSWORD: changeme
+      #     ELASTICSEARCH_PORT: 9200
+      #     XPACK_GRAPH_ENABLED: false
+      #     XPACK_ML_ENABLED: false
+      #     XPACK_MONITORING_ENABLED: false
+      #     XPACK_REPORTING_ENABLED: false
+      #     XPACK_SECURITY_ENABLED: false
+      #- SERVERNAME=kibana
+    #   links:
+    #     - elasticsearch
+    depends_on:
+      - elasticsearch
+    ports:
+      - 5601:5601
+    networks:
+      - kong-net
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    # volumes:
+    #   - ./kibanadata:/usr/share/kibana/data
+  #     # - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
+  #     # - ./kibana:/opt/kibana/config
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "curl -s -I http://localhost:5601 | grep -q 'HTTP/1.1 302 Found'"]
+  #     interval: 10s
+  #     timeout: 10s
+  #     retries: 120
+
+  # #######################################
+  # # Logstash: The log ETL
+  # #######################################
+  # logstash:
+  #   container_name: logstash
+  #   image:  docker.elastic.co/logstash/logstash:8.0.1
+  #   restart: always
+  #   environment:
+  #     - ES_HOST=elasticsearch
+  #     - ES_PORT=9200
+  #     #- LS_JAVA_OPTS="-Xms512m -Xmx512m"
+  #     - LOGSTASH_INTERNAL_PASSWORD=changeme
+  #   networks:
+  #     - kong-net
+  #   # links:
+  #   #   - elasticsearch
+  #   depends_on:
+  #     - elasticsearch
+  #   ports:
+  #     - "5000:5000"
+  #     - "9600:9600"
+  #     - "5044:5044"
+  #     # - "5000:5000/tcp"
+  #     # - "5000:5000/udp"
+  #   ulimits:
+  #     memlock:
+  #       soft: -1
+  #       hard: -1
+  #   # volumes:
+  #   #   - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+  #   #   - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+
+  # #######################################
+  # # Grafana: The metrics dashboard
+  # #######################################
+  # grafana:
+  #   image: "grafana/grafana:latest"
+  #   restart: always
+  #   env_file: config/grafana.env
+  #   ports:
+  #     - "${KEYCLOAK_PORT:-3000}:3000"

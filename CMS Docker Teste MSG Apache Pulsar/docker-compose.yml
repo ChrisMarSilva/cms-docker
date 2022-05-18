@@ -1,0 +1,38 @@
+
+version: '3.9'
+
+services:
+
+  pulsar:
+    hostname: pulsar
+    container_name: pulsar
+    image: apachepulsar/pulsar:2.9.1
+    #restart: always
+    restart: unless-stopped
+    ports:
+      - 8081:8080
+      - 6650:6650
+    # expose:
+    #   - 8080
+    #   - 6650
+    # environment:
+    #   - PULSAR_MEM=" -Xms512m -Xmx512m -XX:MaxDirectMemorySize=1g"
+    volumes:
+      - ./pulsardata/:/pulsar/data
+      - ./pulsarconf/:/pulsar/conf
+    command: bin/pulsar standalone
+    # command: /bin/bash -c "bin/pulsar standalone"  
+    # command: /bin/bash -c "bin/apply-config-from-env.py conf/standalone.conf && bin/pulsar standalone"
+
+  dashboard:
+    container_name: dashboard
+    image: apachepulsar/pulsar-manager:v0.2.0
+    ports:
+      - "9527:9527"
+      - "7750:7750"
+    depends_on:
+      - pulsar
+    links:
+      - pulsar
+    environment:
+      SPRING_CONFIGURATION_FILE: /pulsar-manager/pulsar-manager/application.properties

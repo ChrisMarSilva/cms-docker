@@ -1,0 +1,34 @@
+
+cd 'C:\Users\chris\Desktop\CMS Docker\CMS Docker Teste BD MySQL'
+
+
+docker-compose down
+docker-compose up -d --build 
+docker-compose up -d 
+
+--------------------------------------------------------
+
+
+docker-compose up -d
+docker system prune --all -f
+docker-compose up -d --build --force-recreate
+
+"C:\Program Files\Docker\Docker\DockerCli.exe" -SwitchDaemon
+
+
+https://devopsheaven.com/mysql/mysqldump/databases/docker/backup/2017/09/17/backup-mysql-database-using-docker.html
+
+docker exec -i worker-mysql bash -l -c "/usr/bin/mysqldump --user=root --password=Chrs8723 tamonabo_BDCMSTamoNaBolsa > /var/lib/mysql/tmp/cms_backup.sql"
+docker exec -i worker-mysql bash -l -c "/usr/bin/mysqldump --user=root --password=Chrs8723 tamonabo_BDCMSTamoNaBolsa | gzip -9 > /var/lib/mysql/tmp/cms_backup2.sql.gz"
+docker exec -i worker-mysql bash -l -c "/usr/bin/mysqldump --user=root --password=Chrs8723 tamonabo_BDCMSTamoNaBolsa TBALERTA > /var/lib/mysql/tmp/tamonabo_BDCMSTamoNaBolsa_TBALERTA.sql"
+
+
+
+docker exec worker-mysql mysql --user=root --password=Chrs8723 --database=tamonabo_BDCMSTamoNaBolsa -e "select * from TBALERTA;"
+docker exec -it worker-mysql mysql --user=root --password=Chrs8723 --database=tamonabo_BDCMSTamoNaBolsa -e "select * from TBALERTA;"
+docker exec -t -i worker-mysql mysql --user=root --password=Chrs8723 --database=tamonabo_BDCMSTamoNaBolsa -e "select * from TBALERTA;"
+
+
+docker exec -i worker-mysql bash -l -c "/usr/bin/mysql --user=root --password=Chrs8723 --database=tamonabo_BDCMSTamoNaBolsa > cms_backup.sql"
+docker exec -i worker-mysql bash -l -c "/usr/bin/mysqldump --user=root --password=Chrs8723 tamonabo_BDCMSTamoNaBolsa > cms_backup.sql"
+

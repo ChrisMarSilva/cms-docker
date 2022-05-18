@@ -1,0 +1,5 @@
+jaeger-client
+opentracing
+opentracing-instrumentation
+prometheus-client
+ipython

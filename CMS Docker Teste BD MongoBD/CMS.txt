@@ -1,0 +1,31 @@
+
+cd 'C:\Users\chris\Desktop\CMS Docker\CMS Docker Teste BD MongoBD'
+
+docker system prune --all -f
+docker-compose up -d --build --force-recreate
+
+docker-compose down
+docker-compose up -d --build
+
+docker-compose down
+docker-compose up -d
+
+
+
+
+netstat -a -n -o | findstr :8081 | findstr LISTENING
+
+
+
+net stop winnat
+docker start container_name
+net start winnat
+
+
+
+docker pull tutum/mongodb
+docker run -d -p 27017:27017 -p 28017:28017 -e AUTH=no tutum/mongodb
+docker run -d -p 27017:27017 -p 28017:28017 -e MONGODB_PASS="mypass" tutum/mongodb
+docker run -it --network some-network --rm mongo mongo --host some-mongo test
+
+

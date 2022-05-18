@@ -1,0 +1,75 @@
+
+------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------
+
+curl.exe -Lo C:\k\kubeadm.exe https://dl.k8s.io/v1.19.0/bin/windows/amd64/kubeadm.exe
+curl https://storage.googleapis.com/kubernetes-release/release/v1.19.0/bin/windows/amd64/kubectl.exe
+https://storage.googleapis.com/kubernetes-release/release/stable.txt .
+kubectl version --client
+
+$ curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+$ sudo touch /etc/apt/sources.list.d/kubernetes.list 
+$ echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+$ sudo apt-get update
+$ sudo apt-get install -y kubectl
+
+$ curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.28.2/minikube-linux-amd64
+$ chmod +x minikube && sudo mv minikube /usr/local/bin/
+
+$ minikube start
+$ kubectl api-versions
+
+
+sudo apt update
+sudo apt install snapd
+sudo snap install kubectl --classic
+
+sudo apt-get update && sudo apt-get install -y apt-transport-https gnupg2 curl
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+sudo apt-get update
+sudo apt-get install -y kubectl
+
+------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------
+
+choco install kind -f
+choco install kubernetes-cli -f  # choco install kubectl
+choco uninstall kind
+choco uninstall kubernetes-cli  # 
+choco uninstall kubectl
+
+------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------
+
+kind get clusters
+kubectl get nodes  # cms-cluster-python-hello-control-plane
+kubectl get namespace # default
+kubectl get pods
+kubectl get services
+kubectl get deployment
+
+
+kind create cluster --name=cms-cluster-python-hello
+	kubectl cluster-info --context kind-cms-cluster-python-hello
+	kind get clusters
+	kubectl config view
+	kubectl config get-contexts
+	kubectl config delete-context k3d-mycluster
+
+kubectl apply -f 1_deployment.yaml
+	kubectl get deployment
+	kubectl delete deployment cms-python-kind-server
+
+kubectl apply -f 3_cronjob.yaml
+	kubectl get cronjobs
+	kubectl get jobs --watch
+	pods=$(kubectl get pods --selector=job-name=hello-4111706356 --output=jsonpath={.items[*].metadata.name})
+	kubectl logs $pods
+	kubectl get pods
+	kubectl logs ccccccccccc
+	kubectl logs cms-server-python-hello-cronjob
+	kubectl delete cronjobs cms-server-python-hello-cronjob
+
+------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------

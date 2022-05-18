@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  wrk-nats:
+    hostname: wrk-nats #  nats-server
+    container_name: wrk-nats
+    image: nats:scratch
+    networks:
+      - cms-tnb-nats
+    ports:
+      #- "4222:4222"
+      - "8222:8222"
+    # expose:
+    #   - "4222"
+    #entrypoint: "/gnatsd -DV"
+    #entrypoint: /nats-surveyor
+    restart: always
+
+networks:
+  cms-tnb-nats:
+    driver: bridge

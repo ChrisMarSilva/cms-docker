@@ -1,0 +1,152 @@
+
+
+cd 'C:\Users\chris\Desktop\CMS Docker\CMS Docker Teste IBM MQ\'
+
+docker-compose down
+docker-compose up -d --build
+
+netstat -a
+
+
+docker run --env LICENSE=accept --env MQ_QMGR_NAME=QM1 --env MQ_USER_NAME="mqm" --env MQ_ADMIN_PASSWORD="Admin123" --env MQ_APP_PASSWORD="Admin123" --publish 2414:1414 --publish 9443:9443 --detach ibmcom/mq
+
+https://localhost:9443
+admin = Admin
+app = Admin123
+admin = Admin123 = ok
+
+
+docker pull ibmcom/mq
+docker pull docker.io/ibmcom/mq:latest
+docker run --env LICENSE=accept --env MQ_QMGR_NAME=QM1 --volume qm1data:/mnt/mqm --publish 1414:1414 --publish 9443:9443 --detach --env MQ_APP_PASSWORD=Admin123 ibmcom/mq:latest
+
+
+
+
+
+
+
+
+
+
+
+
+
+     
+
+
+echo "DISPLAY CHSTATUS(*)" | runmqsc QM1
+
+https://www.ibm.com/docs/en/ibm-mq/9.0?topic=console-getting-started-mq
+
+
+
+import pymqi
+
+queue_manager = 'QM1'
+qmgr = pymqi.connect(queue_manager)
+
+qmgr.disconnect()
+
+
+
+
+
+
+
+
+
+
+
+
+docker run --env LICENSE=accept \
+           --env MQ_QMGR_NAME=QM1 \
+           --env MQ_APP_PASSWORD=passw0rd \
+           --publish 1414:1414 \
+           --publish 9443:9443 \
+           --detach \
+           ibmcom/mq
+
+
+
+services:
+  producer:
+    image: networknt/com.networknt.mqproducer-1.0.0
+    image: ibmcom/mq:latest
+    ports:
+    - "8443:8443"
+    volumes:
+    - ./producer:/config
+    networks:
+    - localnet
+  consumer:
+    image: networknt/com.networknt.mqconsumer-1.0.0
+    ports:
+    - "8444:8444"
+    volumes:
+    - ./consumer:/config
+    networks:
+    - localnet
+networks:
+  localnet:
+    # driver: bridge
+    external: true
+
+
+consumer/mq.yml
+
+
+    # If the MQ component is enabled or not
+    enabled: true
+    # If TLS is used to connect to the MQ server
+    loadTrustStore: false
+    # The Truststore that contains the MQ client certificate
+    trustStore: mq.truststore
+    # The password that is used to open the truststore
+    trustStorePass: passw0rd
+    # Queue Manager
+    queueManager: QM1
+    # Channel
+    channel: DEV.APP.SVRCONN
+    # Connection host
+    host: 192.168.1.144
+    # Connection port
+    port: 1414
+    # user
+    user: app
+    # password
+    password: passw0rd
+    # Cipher Suite used for the TLS
+    # cipherSuite: SSL_RSA_WITH_AES_128_CBC_SHA256
+    # Default Queue Name
+    queue: DEV.QUEUE.1
+    # Default Topic Name
+    topic: dev/
+
+producer/mq.yml
+    # If the MQ component is enabled or not
+    enabled: true
+    # If TLS is used to connect to the MQ server
+    loadTrustStore: false
+    # The Truststore that contains the MQ client certificate
+    trustStore: mq.truststore
+    # The password that is used to open the truststore
+    trustStorePass: passw0rd
+    # Queue Manager
+    queueManager: QM1
+    # Channel
+    channel: DEV.APP.SVRCONN
+    # Connection host
+    host: 192.168.1.144
+    # Connection port
+    port: 1414
+    # user
+    user: app
+    # password
+    password: passw0rd
+    # Cipher Suite used for the TLS
+    # cipherSuite: SSL_RSA_WITH_AES_128_CBC_SHA256
+    # Default Queue Name
+    queue: DEV.QUEUE.1
+    # Default Topic Name
+    topic: dev/

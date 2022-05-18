@@ -1,0 +1,33 @@
+
+version: '3.9'
+
+services:
+  worker-cassandra:
+    image: cassandra:latest
+    #hostname: my-cassandra
+    container_name: worker-cassandra
+    #command: "cqlsh -f init-database.cql"
+    #command: /bin/bash -c "sleep 1 && echo ' -- Pausing to let system catch up ... -->' && /docker-entrypoint.sh cassandra -f"
+    ports:
+      - 9042:9042
+    restart: always
+    volumes:
+      - ./data/cassandra:/var/lib/cassandra
+      # - ~/apps/cassandra:/var/lib/cassandra
+      # - ./out/cassandra_data:/var/lib/cassandra
+      # - ./build/cassandra:/var/lib/cassandra
+    environment:
+      - CASSANDRA_CLUSTER_NAME=citizix
+      - MAX_HEAP_SIZE=256M
+      - HEAP_NEWSIZE=128M
+    healthcheck:
+      test: ["CMD-SHELL", "[ $$(nodetool statusgossip) = running ]"]
+      interval: 10s
+      timeout: 5s
+      retries: 50
+    networks:
+      - cms-net-cassandra
+
+networks: 
+  cms-net-cassandra:
+    driver: bridge
