@@ -31,27 +31,9 @@ print(f"")
 
 try:
     print(f"#1 Try conectiong localhost:3306")
-    conn = mysql.connector.connect(user='root', password='', host='localhost', port=3306, database='tamonabo_BDCMSTamoNaBolsa')
+    conn = mysql.connector.connect(user='root', password='', host='localhost', port=3306, database='database')
 except Exception as e:
     print("#1", str(e))
-
-    try:
-        print(f"#2 Try conectiong 127.0.0.1:3306")
-        conn = mysql.connector.connect(user='root', password='', host='127.0.0.1', port=3306, database='tamonabo_BDCMSTamoNaBolsa')
-    except Exception as e:
-        print("#2", str(e))
-    
-        try:
-            print(f"#3 Try conectiong 189.51.158.212:3306")
-            conn = mysql.connector.connect(user='root', password='', host='189.51.158.212', port=3306, database='tamonabo_BDCMSTamoNaBolsa')
-        except Exception as e:
-            print("#3", str(e))
-    
-            try:
-                print(f"#4 Try conectiong ns742.hostgator.com.br:3306")
-                conn = mysql.connector.connect(user='tamonabo_rootcms', password='Chrs8723', host='ns742.hostgator.com.br', port=3306, database='tamonabo_BDCMSTamoNaBolsa')
-            except Exception as e:
-                print("#4", str(e))
 
 cursor  = conn.cursor() 
 cursor.execute("SELECT A.ID, A.NOME FROM TBUSUARIO A")

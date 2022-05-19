@@ -98,10 +98,7 @@ func GetDatabase() *gorm.DB {
 	}
 
 	// LOCALHOST
-	// #dsn := "root:Chrs8723@tcp(localhost:3306)/tamonabo_BDCMSTamoNaBolsa?parseTime=true&loc=Local"
-
-	// HOSTGATOR
-	dsn := "tamonabo_rootcms:Chrs8723@tcp(nspro44.hostgator.com.br:3306)/tamonabo_BDCMSTamoNaBolsa?parseTime=true&loc=Local"
+	dsn := "root:senha@tcp(localhost:3306)/database?parseTime=true&loc=Local"
 
 	db, err := gorm.Open(mysql.Open(dsn), newConfig)
 	if err != nil {

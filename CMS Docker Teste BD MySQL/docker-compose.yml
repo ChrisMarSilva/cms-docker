@@ -15,11 +15,12 @@ services:
     restart: always
     command: --default-authentication-plugin=mysql_native_password
     environment:
-      MYSQL_DATABASE: "tamonabo_BDCMSTamoNaBolsa"
-      MYSQL_ROOT_PASSWORD: "Chrs8723"
+      MYSQL_DATABASE: "${MYSQL_DATABASE}"
       MYSQL_USER: "root"
-      MYSQL_PASSWORD: "Chrs8723"
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
       MYSQL_PORT: 3306
+    env_file: .env
     volumes:
       - ./lib/:/var/lib/mysql/
     ports:
