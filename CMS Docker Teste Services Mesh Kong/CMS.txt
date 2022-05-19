@@ -31,7 +31,7 @@ http://localhost:1337
 
 https://github.com/pantsel/konga
 
-docker run -p 1337:1337 --network kong-net -e "TOKEN_SECRET=ahfdjgjgf79JKLFHJKh978953kgdfjkl" -e "DB_ADAPTER=postgres" -e "DB_HOST=kong-database" -e "DB_PORT=5432" -e "DB_USER=kong" -e "DB_PASSWORD=kong" -e "DB_DATABASE=konga" -e "NODE_ENV=production" --name konga pantsel/konga
+docker run -p 1337:1337 --network kong-net -e "TOKEN_SECRET=<TOKEN_SECRET>" -e "DB_ADAPTER=postgres" -e "DB_HOST=kong-database" -e "DB_PORT=5432" -e "DB_USER=kong" -e "DB_PASSWORD=kong" -e "DB_DATABASE=konga" -e "NODE_ENV=production" --name konga pantsel/konga
 
 
 ------------------------------
