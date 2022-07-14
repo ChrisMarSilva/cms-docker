@@ -1,4 +1,7 @@
 
+--------------------------------------------------------
+--------------------------------------------------------
+
 cd 'C:\Users\chris\Desktop\CMS Docker\CMS Docker Teste BD MySQL Master Slave'
 
 
@@ -8,16 +11,83 @@ docker-compose up -d
 
 
 --------------------------------------------------------
+--------------------------------------------------------
+
+docker pull mysql:latest
+docker pull mysql:8.0
+docker pull mysql:5.7
+
+image: mysql:latest
+image: mysql:8.0
+image: mysql:5.7
+
+- 4406:3306
+- 5506:3306
+
+bash mysql-deployment.sh
+bash run-replica.sh
+bash setup_1to1.sh
 
 
+
+mysql -u root -p123
+CREATE DATABASE `master_db` CHARACTER SET 'utf8';
+CREATE user 'rep'@'%' IDENTIFIED BY '1234567';
+GRANT replication slave,replication client on *.* TO 'rep'@'%';
+GRANT replication slave ON *.* TO rep@'%' IDENTIFIED BY '1234567';
+flush privileges;
+exit
+mysqld restart
+
+
+
+mysql -u root -p456
+CREATE DATABASE IF NOT EXISTS `master_db` CHARACTER SET 'utf8';
+GRANT SElECT ON *.* TO 'viewer'@'%' IDENTIFIED BY "1234567";
+STOP SLAVE;
+-- RESET SLAVE;
+change master to master_host='mysql_master',master_user='rep',master_password='1234567',master_auto_position=1;
+flush privileges;
+START SLAVE;
+SHOW slave status\G;
+SHOW slave status;
+exit
+mysqld restart
+
+
+
+use mysql
+drop table slave_master_info;
+drop table slave_relay_log_info;
+drop table slave_worker_info;
+drop table innodb_index_stats;
+drop table innodb_table_stats;
+
+
+
+
+--------------------------------------------------------
+--------------------------------------------------------
+
+CREATE SCHEMA banco;
+CREATE DATABASE banco;
+
+show databases;
+
+
+DROP TABLE IF EXISTS users;
 
 CREATE TABLE users(
-    id int AUTO_INCREMENT not null,
-    nick_name varchar(80),
-    name varchar(80),
-    email varchar(80),
-    password varchar(80),
-	  created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-    updated_at datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (id)
-)
+	id int AUTO_INCREMENT not null,
+	nick_name varchar(80),
+	name varchar(80),
+	email varchar(80),
+	password varchar(80),
+	created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+	updated_at datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+	PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+--------------------------------------------------------
+--------------------------------------------------------

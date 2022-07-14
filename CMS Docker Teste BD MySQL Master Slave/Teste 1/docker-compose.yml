@@ -35,16 +35,23 @@ services:
       - wrk-mysql-master
     networks:
       - overlay
+    # environment:
+    #   - TZ:${TZ}
 
-  wrk-mysql-configure:
-    container_name: wrk-mysql-configure
-    image: mysql:5.7
-    environment:
-      - "MYSQL_SLAVE_PASSWORD=root"
-      - "MYSQL_MASTER_PASSWORD=root"
-      - "MYSQL_ROOT_PASSWORD=root"
-      - "MYSQL_REPLICATION_USER=repl"
-      - "MYSQL_REPLICATION_PASSWORD=repl"
-    volumes:
-      - ./connector/mysql_connector.sh:/tmp/mysql_connector.sh
-    command: /bin/bash -x /tmp/mysql_connector.sh
+  # wrk-mysql-configure:
+  #   container_name: wrk-mysql-configure
+  #   image: mysql:5.7
+  #   environment:
+  #     - "MYSQL_SLAVE_PASSWORD=111"
+  #     - "MYSQL_MASTER_PASSWORD=111"
+  #     - "MYSQL_ROOT_PASSWORD=root"
+  #     - "MYSQL_REPLICATION_USER=repl"
+  #     - "MYSQL_REPLICATION_PASSWORD=repl"
+  #   volumes:
+  #     - ./connector/mysql_connector.sh:/tmp/mysql_connector.sh
+  #   command: /bin/bash -x /tmp/mysql_connector.sh
+  #   depends_on:
+  #     - wrk-mysql-master
+  #     - wrk-mysql-slave
+  #   networks:
+  #     - overlay

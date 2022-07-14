@@ -1,0 +1,6 @@
+FROM mysql:5.7
+MAINTAINER harrison
+ADD ./master/my.cnf /etc/mysql/my.cnf
+ADD ./sources.list /etc/apt/
+RUN apt-get update && apt-get install vim -y --force-yes \
+        && apt install net-tools -y --force-yes

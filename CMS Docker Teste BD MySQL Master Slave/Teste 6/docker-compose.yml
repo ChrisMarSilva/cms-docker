@@ -1,0 +1,40 @@
+version: '3.8'
+
+networks:
+  net-docker:
+    # external: true
+
+services:
+
+  db1:
+    container_name: mysql_master
+    image: mysql:5.7
+    mem_limit: 512m
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: 123
+    ports:
+      - "4406:3306"
+    volumes:
+      - ./db_data:/var/lib/mysql
+      - ./mysql_master.cnf:/etc/my.cnf
+    networks:
+      - net-docker
+
+  db2:
+    container_name: mysql_slave
+    image: mysql:5.7
+    mem_limit: 512m
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: 456
+    ports:
+      - "5506:3306"
+    volumes:
+      - ./db_data2:/var/lib/mysql
+      - ./mysql_slave.cnf:/etc/my.cnf
+    networks:
+      - net-docker
+

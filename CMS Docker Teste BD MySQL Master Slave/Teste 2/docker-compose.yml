@@ -1,0 +1,38 @@
+version: '2'
+
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 192.100.0.0/16
+
+services:
+
+  mysql:
+    build:
+      context: ./
+      dockerfile: ./master/Dockerfile
+    environment:
+      - "MYSQL_ROOT_PASSWORD=admin"
+    links:
+      - mysql-slave
+    ports:
+      - "4406:3306"
+    restart: always
+    hostname: mysql
+    volumes:
+      - ./volumes/mysql-master:/var/lib/mysql
+
+  mysql-slave:
+    build:
+      context: ./
+      dockerfile: slave/Dockerfile
+    environment:
+      - "MYSQL_ROOT_PASSWORD=admin"
+    ports:
+      - "5506:3306"
+    restart: always
+    hostname: mysql-slave
+    volumes:
+      - ./volumes/mysql-slave:/var/lib/mysql
+
