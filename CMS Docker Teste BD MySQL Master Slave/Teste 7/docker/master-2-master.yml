@@ -1,0 +1,37 @@
+version: "2"
+
+services:
+
+    master_1:
+        extends:
+            file: common-services.yml
+            service: common_master_1
+
+    master_2:
+        extends:
+            file: common-services.yml
+            service: common_master_2
+
+    replication:
+        extends:
+            file: common-services.yml
+            service: replication
+        depends_on:
+            - master_1
+            - master_2
+        command: bash ${REPL_SCRIPT_MOUNT_PATH}/master-2-master.sh
+
+    pma:
+        extends:
+            file: common-services.yml
+            service: pma
+        depends_on:
+            - master_1
+            - master_2
+            - replication
+
+networks:
+    replication_network:
+        ipam:
+            config:
+                - subnet: 10.208.0.0/16

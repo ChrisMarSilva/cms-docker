@@ -28,6 +28,15 @@ bash mysql-deployment.sh
 bash run-replica.sh
 bash setup_1to1.sh
 
+bash start master-slave
+bash stop master-slave
+bash start master-master
+bash start slave-master-master-slave
+
+SHOW MASTER STATUS
+SHOW SLAVE STATUS\G
+
+
 
 
 yum update
