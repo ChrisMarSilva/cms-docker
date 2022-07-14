@@ -1,0 +1,41 @@
+version: '3.8'
+
+networks:
+  net-docker:
+
+
+services:
+
+  wrk-mysql-master:
+    container_name: wrk-mysql-master
+    image: mysql:5.7
+    mem_limit: 2g
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: 123
+    ports:
+      - "4406:3306"
+    volumes:
+      - ./master/data:/var/lib/mysql
+      #- ./mysql_master.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
+      - ./mysql_master.cnf:/etc/mysql/conf.d/my.cnf
+    networks:
+      - net-docker
+
+  wrk-mysql-slave:
+    container_name: wrk-mysql-slave
+    image: mysql:5.7
+    mem_limit: 2g
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: 456
+    ports:
+      - "5506:3306"
+    volumes:
+      - ./slave/data:/var/lib/mysql
+      #- ./mysql_slave.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
+      - ./mysql_slave.cnf:/etc/mysql/conf.d/my.cnf
+    networks:
+      - net-docker

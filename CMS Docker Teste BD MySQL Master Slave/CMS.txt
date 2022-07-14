@@ -30,7 +30,27 @@ bash setup_1to1.sh
 
 
 
-mysql -u root -p123
+yum update
+yum install vim-enhanced -y
+yum install nano -y
+yum install vim-minimal -y
+
+vi /etc/mysql/mysql.conf.d/mysql.conf
+vim /etc/mysql/mysql.conf.d/mysql.conf
+nano /etc/mysql/mysql.conf.d/mysql.conf
+nano /etc/my.cnf
+
+
+/etc/mysql/conf.d/mysql.conf.cnf
+/etc/mysql/conf.d/mysql.cnf
+/etc/mysql/my.cnf
+/etc/my.cnf
+
+
+
+
+mysql -u root -p123;
+SHOW master status;
 CREATE DATABASE `master_db` CHARACTER SET 'utf8';
 CREATE user 'rep'@'%' IDENTIFIED BY '1234567';
 GRANT replication slave,replication client on *.* TO 'rep'@'%';
@@ -41,7 +61,7 @@ mysqld restart
 
 
 
-mysql -u root -p456
+mysql -u root -p456\g
 CREATE DATABASE IF NOT EXISTS `master_db` CHARACTER SET 'utf8';
 GRANT SElECT ON *.* TO 'viewer'@'%' IDENTIFIED BY "1234567";
 STOP SLAVE;

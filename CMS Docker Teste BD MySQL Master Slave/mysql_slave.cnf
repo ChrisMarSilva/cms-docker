@@ -1,0 +1,29 @@
+[mysqld]
+server_id=2
+log_bin = /var/log/mysql/mysql-bin.log
+log_bin_index = /var/log/mysql/mysql-bin.log.index
+relay_log = /var/log/mysql/mysql-relay-bin
+relay_log_index = /var/log/mysql/mysql-relay-bin.index
+bind-address = 0.0.0.0
+gtid_mode=ON
+enforce_gtid_consistency=ON
+log_slave_updates = ON
+#gtid_mode = off
+#enforce_gtid_consistency = false
+slow_query_log=ON
+long_query_time=1.0
+skip-host-cache
+skip-name-resolve
+datadir=/var/lib/mysql
+socket=/var/run/mysqld/mysqld.sock
+secure-file-priv=/var/lib/mysql-files
+user=mysql
+symbolic-links=0
+master-info-repository=table  
+relay-log-info-repository=table
+log-error=/var/log/mysqld.log
+pid-file=/var/run/mysqld/mysqld.pid
+
+[client]
+socket=/var/run/mysqld/mysqld.sock
+!includedir /etc/mysql/conf.d/
