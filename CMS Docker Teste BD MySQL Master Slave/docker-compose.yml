@@ -1,0 +1,50 @@
+
+version: "3"
+
+networks:
+  overlay:
+
+services:
+
+  wrk-mysql-master:
+    container_name: wrk-mysql-master
+    image: mysql:5.7
+    restart: always
+    env_file: ./master/master.env
+    volumes:
+      - ./master/conf/mysql.conf.cnf:/etc/mysql/conf.d/mysql.conf.cnf
+      - ./master/data:/var/lib/mysql
+    ports:
+      - 4406:3306
+    networks:
+      - overlay
+    # environment:
+    #   - TZ:${TZ}
+
+  wrk-mysql-slave:
+    container_name: wrk-mysql-slave
+    image: mysql:5.7
+    restart: always
+    env_file: ./slave/slave.env
+    volumes:
+      - ./slave/conf/mysql.conf.cnf:/etc/mysql/conf.d/mysql.conf.cnf
+      - ./slave/data:/var/lib/mysql
+    ports:
+      - 5506:3306
+    depends_on:
+      - wrk-mysql-master
+    networks:
+      - overlay
+
+  wrk-mysql-configure:
+    container_name: wrk-mysql-configure
+    image: mysql:5.7
+    environment:
+      - "MYSQL_SLAVE_PASSWORD=root"
+      - "MYSQL_MASTER_PASSWORD=root"
+      - "MYSQL_ROOT_PASSWORD=root"
+      - "MYSQL_REPLICATION_USER=repl"
+      - "MYSQL_REPLICATION_PASSWORD=repl"
+    volumes:
+      - ./connector/mysql_connector.sh:/tmp/mysql_connector.sh
+    command: /bin/bash -x /tmp/mysql_connector.sh

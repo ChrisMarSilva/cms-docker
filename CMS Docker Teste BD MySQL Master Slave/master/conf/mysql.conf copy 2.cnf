@@ -1,0 +1,15 @@
+[mysqld]
+
+skip-host-cache
+skip-name-resolve
+
+server-id = 1
+log_bin = /var/log/mysql/mysql-bin.log
+binlog_format = ROW
+binlog_do_db = mydb
+
+log-bin=mysql-bin
+log-slave-updates=1
+datadir=/var/lib/mysql/
+innodb_flush_log_at_trx_commit = 2
+innodb_flush_method = O_DIRECT

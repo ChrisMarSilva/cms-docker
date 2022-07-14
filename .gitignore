@@ -583,9 +583,11 @@ CMS Aulas Testes/cache.sqlite
 *.sqlite
 
 CMS Docker Teste MySQL/lib/
+CMS Docker Teste BD MariaDB/lib/
 CMS Docker Teste BD MySQL/lib/
 CMS Docker Teste BD MySQL Escalável/lib/
-CMS Docker Teste BD MySQL Escalável/lib/
+CMS Docker Teste BD MySQL Master Slave/master/data/
+CMS Docker Teste BD MySQL Master Slave/slave/data/
 lib/
 CMS Docker Teste BD Cassandra/data/
 CMS Docker Teste BD Redis/data/
