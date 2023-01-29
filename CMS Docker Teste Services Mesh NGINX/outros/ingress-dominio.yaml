@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-dominio
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: blue.138.197.227.130.nip.io
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: web-blue
+            port:
+              number: 80
+  - host: green.138.197.227.130.nip.io
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: web-green
+            port:
+              number: 80
