@@ -583,37 +583,37 @@ CMS Aulas Testes/cache.sqlite
 *.sqlite
 
 CMS Docker Teste MySQL/lib/
-CMS Docker Teste BD MariaDB/lib/
-CMS Docker Teste BD MySQL/lib/
-CMS Docker Teste BD MySQL Escalável/lib/
-CMS Docker Teste BD MySQL Master Slave/master/data/
-CMS Docker Teste BD MySQL Master Slave/slave/data/
+CMS Docker Teste BD/CMS Docker Teste MySQL/lib/
+CMS Docker Teste BD/CMS Docker Teste BD MariaDB/lib/
+CMS Docker Teste BD/CMS Docker Teste BD MySQL/lib/
+CMS Docker Teste BD/CMS Docker Teste BD MySQL Escalável/lib/
+CMS Docker Teste BD/CMS Docker Teste BD MySQL Master Slave/master/data/
+CMS Docker Teste BD/CMS Docker Teste BD MySQL Master Slave/slave/data/
 lib/
-CMS Docker Teste BD Cassandra/data/
-CMS Docker Teste BD Redis/data/
-CMS Docker Teste BD MongoBD/data/
+CMS Docker Teste BD/CMS Docker Teste BD Cassandra/data/
+CMS Docker Teste BD/CMS Docker Teste BD Redis/data/
+CMS Docker Teste BD/CMS Docker Teste BD MongoBD/data/
+CMS Docker Teste BD/CMS Docker Teste BD MongoBD/docker-compose-secret.yml
 
-CMS Docker Teste RabbitMQ/.docker/
-CMS Docker Teste MSG RabbitMQ/.docker/
+CMS Docker Teste Msg/CMS Docker Teste RabbitMQ/.docker/
+CMS Docker Teste Msg/CMS Docker Teste MSG RabbitMQ/.docker/
 .docker/
+CMS Docker Teste Msg/CMS Docker Teste IBM MQ/data/
+CMS Docker Teste Msg/CMS Docker Teste MSG IBM MQ/data/
+CMS Docker Teste Msg/CMS Docker Teste MSG Apache Pulsar/pulsardata/
+CMS Docker Teste Msg/CMS Docker Teste MSG Apache Pulsar/pulsarconf/
 
-CMS Docker Teste IBM MQ/data/
-CMS Docker Teste MSG IBM MQ/data/
+CMS Docker Teste Services/CMS Docker Teste Services Mesh Kong/data/
+CMS Docker Teste Services/CMS Docker Teste Services Mesh Nginx Proxy Manager/data/
+CMS Docker Teste Services/CMS Docker Teste Services Mesh Nginx Proxy Manager/data2/
+CMS Docker Teste Services/CMS Docker Teste Services Mesh Nginx Proxy Manager/logs/
+CMS Docker Teste Services/CMS Docker Teste Services Mesh Nginx Proxy Manager/web/
+CMS Docker Teste Services/CMS Docker Teste Services Mesh Nginx Proxy Manager/letsencrypt/
 
-CMS Docker Teste Services Mesh Kong/data/
+CMS Docker Teste Trace/CMS Docker Teste Trace Elastic/elk-7-6-2/data/
+CMS Docker Teste Trace/CMS Docker Teste Trace Elastic/elk-8-0-0/data/
+CMS Docker Teste Trace/CMS Docker Teste Trace Elastic/elk-8-0-1/data/
+CMS Docker Teste Trace/CMS Docker Teste Trace Elastic/elk-8-0-1 - Old/data/
 
-CMS Docker Teste Services Mesh Nginx Proxy Manager/data/
-CMS Docker Teste Services Mesh Nginx Proxy Manager/data2/
-CMS Docker Teste Services Mesh Nginx Proxy Manager/logs/
-CMS Docker Teste Services Mesh Nginx Proxy Manager/web/
-CMS Docker Teste Services Mesh Nginx Proxy Manager/letsencrypt/
-CMS Docker Teste Trace Elastic/elk-7-6-2/data/
-CMS Docker Teste Trace Elastic/elk-8-0-0/data/
-CMS Docker Teste Trace Elastic/elk-8-0-1/data/
-CMS Docker Teste Trace Elastic/elk-8-0-1 - Old/data/
-CMS Docker Teste MSG Apache Pulsar/pulsardata/
-CMS Docker Teste MSG Apache Pulsar/pulsarconf/
 *.exe
 *docker-compose-secret.yml
-/CMS Docker Teste BD MongoBD/docker-compose-secret.yml
-CMS Docker Teste BD MongoBD\docker-compose-secret.yml

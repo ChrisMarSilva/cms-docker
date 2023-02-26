@@ -1,0 +1,28 @@
+version: '3.7'
+
+services:
+  rabbit:
+    hostname: "rabbit"
+    container_name: rabbit
+    image: rabbitmq:3.11-management
+    command: rabbitmq-server
+    restart: always
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+      - RABBITMQ_ERLANG_COOKIE=s3cr3tc00ki3
+      - CLUSTERED=true
+    volumes:
+      - ./.docker/rabbitmq/etc/:/etc/rabbitmq/
+      - ./.docker/rabbitmq/data/:/var/lib/rabbitmq/
+      - ./.docker/rabbitmq/logs/:/var/log/rabbitmq/
+    # labels:
+    #   NAME: "rabbitmq1"
+    # healthcheck:
+    #   test: [ "CMD", "nc", "-z", "localhost", "15672" ]
+    #   interval: 3s
+    #   timeout: 10s
+    #   retries: 3

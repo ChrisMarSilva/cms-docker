@@ -15,3 +15,15 @@ docker-compose up -d --build --force-recreate
 
 "C:\Program Files\Docker\Docker\DockerCli.exe" -SwitchDaemon
 
+
+--------------------------------------------------------
+
+Error response from daemon: open \\.\pipe\docker_engine_linux: The system cannot find the file specified.
+
+# open powershell in administrative mode
+
+1. cd "C:\Program Files\Docker\Docker"
+2. ./DockerCli.exe -SwitchLinuxEngine
+
+
+--------------------------------------------------------
