@@ -1,5 +1,4 @@
-
-version: '3.9'
+version: '3'
 
 services:
 
@@ -50,11 +49,10 @@ services:
 
   worker-rabbit:
     hostname: cms_python_flask_rabbitmq
-    image: rabbitmq:latest-alpine
-    # image: rabbitmq:3-management-alpine
+    image: rabbitmq:3-management
     container_name: cms_python_flask_rabbitmq
     command: rabbitmq-server
-    restart: always # on-failure # always
+    restart: always
     healthcheck:
       test: [ "CMD", "nc", "-z", "localhost", "5672" ]
       interval: 3s
@@ -73,12 +71,8 @@ services:
       - rabbitNet
 
 networks:
-
-  network: {}
-
   rabbitNet:
-    external:
-      name: rabbitNetwork
-
-  rabbitNet2:
-    external: true
+    driver: bridge
+    # external:
+    #   name: rabbitNetwork
+  network: {}

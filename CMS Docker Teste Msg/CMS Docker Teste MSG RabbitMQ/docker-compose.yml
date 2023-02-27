@@ -1,6 +1,11 @@
-version: '3.7'
+version: "3"
+
+networks:
+  rabbitNet:
+    driver: bridge
 
 services:
+
   rabbit:
     hostname: "rabbit"
     container_name: rabbit
@@ -8,8 +13,11 @@ services:
     command: rabbitmq-server
     restart: always
     ports:
-      - 5672:5672
-      - 15672:15672
+      - "15672:15672"
+      - "5672:5672"
+    expose:
+      - 15672
+      - 5672
     environment:
       - RABBITMQ_DEFAULT_USER=guest
       - RABBITMQ_DEFAULT_PASS=guest
@@ -19,10 +27,112 @@ services:
       - ./.docker/rabbitmq/etc/:/etc/rabbitmq/
       - ./.docker/rabbitmq/data/:/var/lib/rabbitmq/
       - ./.docker/rabbitmq/logs/:/var/log/rabbitmq/
-    # labels:
-    #   NAME: "rabbitmq1"
-    # healthcheck:
-    #   test: [ "CMD", "nc", "-z", "localhost", "15672" ]
-    #   interval: 3s
-    #   timeout: 10s
-    #   retries: 3
+    labels:
+      NAME: "rabbitmq1"
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "15672" ]
+      interval: 3s
+      timeout: 10s
+      retries: 3
+    networks:
+      - rabbitNet
+
+
+
+#version: "3.2"
+
+# networks:
+#   rabbitmq:
+#     driver: bridge
+
+# services:
+
+#   rabbitmq:
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+#     image: rabbitmq:3-management-alpine
+#     container_name: "rabbitmq"
+#     ports:
+#       - 5672:5672
+#       - 15672:15672
+#     volumes:
+#       - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+#       - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+#     restart: unless-stopped
+#     # networks:
+#     #   - rabbitmq
+
+
+# version: '3'
+
+# networks:
+#   network: {}
+
+# services:
+
+#   rabbit1:
+#     image: "rabbitmq:3-management"
+#     hostname: "rabbit1"
+#     environment:
+#       RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+#       RABBITMQ_DEFAULT_USER: "guest"
+#       RABBITMQ_DEFAULT_PASS: "guest"
+#       RABBITMQ_DEFAULT_VHOST: "/"
+#     ports:
+#       - "15672:15672"   # The standard AMQP protocol port
+#       - "5672:5672"   # HTTP management UI
+#     labels:
+#       NAME: "rabbitmq1"
+#     volumes:
+#       - ./.docker/rabbitmq/data/:/var/lib/rabbitmq/
+#       - ./.docker/rabbitmq/logs/:/var/log/rabbitmq/
+#       - ./.docker/rabbitmq/etc/:/etc/rabbitmq/
+#     networks:
+#       - network
+
+
+
+# version: '3.8'
+
+# networks:
+#   rabbitmq_net:
+#     driver: bridge
+
+# services:
+
+#   rabbitmq:
+#     image: rabbitmq:3-management
+#     container_name: rabbitmq_management
+#     restart: always
+#     command: rabbitmq-server
+#     environment:
+#       - RABBITMQ_DEFAULT_USER=guest
+#       - RABBITMQ_DEFAULT_PASS=guest
+#     volumes:
+#       - ./.docker/rabbitmq/data/:/var/lib/rabbitmq/
+#       - ./.docker/rabbitmq/logs/:/var/log/rabbitmq/
+#       - ./.docker/rabbitmq/etc/:/etc/rabbitmq/
+#     ports:
+#       - 4369:4369
+#       - 5671:5671
+#       - 5672:5672
+#       - 15691:15691
+#       - 15692:15692
+#       - 25672:25672 # (erlang) communication between the nodes and CLI tool
+#       - 15671:15671
+#       - 15672:15672 # communication with the web management API 
+#     expose:
+#       - 4369
+#       - 5671
+#       - 5672
+#       - 15691
+#       - 15692
+#       - 25672 # (erlang) communication between the nodes and CLI tool
+#       - 15671
+#       - 15672 # communication with the web management API 
+#     networks:
+#         - rabbitmq_net
+
+
+
