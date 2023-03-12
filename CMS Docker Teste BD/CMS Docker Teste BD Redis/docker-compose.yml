@@ -1,15 +1,15 @@
 version: "3.9"
 
-networks:
-  cms-tnb-redis:
-    driver: bridge
+# networks:
+#   cms-tnb-redis:
+#     driver: bridge
 
 services:
 
   redis:
     container_name: redis
     hostname: redis
-    image: redis:latest # redis:buster # redis:6.2.6-buster # redis:6.2.4-buster
+    image: redis:latest
     restart: always
     ports:
       - 6379:6379
@@ -19,21 +19,21 @@ services:
       - REDIS_REPLICATION_MODE=master
     volumes:
       - ./data/:/data
-    networks:
-      - cms-tnb-redis
+    # networks:
+    #   - cms-tnb-redis
 
-  redis-commander:
-    container_name: redis-ui
-    image: rediscommander/redis-commander:latest
-    restart: always
-    environment:
-      - REDIS_HOSTS=local:localhost:6379 # redis # localhost
-      - REDIS_PASSWORD=123
-      - HTTP_USER=admin
-      - HTTP_PASSWORD=admin
-    ports:
-      - 8082:8081
-    depends_on:
-      - redis
-    networks:
-      - cms-tnb-redis
+  # redis-commander:
+  #   container_name: redis-ui
+  #   image: rediscommander/redis-commander:latest
+  #   restart: always
+  #   environment:
+  #     - REDIS_HOSTS=local:localhost:6379 # redis # localhost
+  #     - REDIS_PASSWORD=123
+  #     - HTTP_USER=admin
+  #     - HTTP_PASSWORD=admin
+  #   ports:
+  #     - 8082:8081
+  #   depends_on:
+  #     - redis
+    # networks:
+    #   - cms-tnb-redis
