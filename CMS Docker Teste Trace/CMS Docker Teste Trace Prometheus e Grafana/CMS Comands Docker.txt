@@ -1,0 +1,23 @@
+
+
+cd 'C:\Users\chris\Desktop\CMS Docker\CMS Docker Teste Trace\CMS Docker Teste Trace Prometheus e Grafana'
+
+docker-compose down
+docker-compose up -d --build
+
+
+docker-compose down
+docker-compose up -d 
+
+
+prometheus
+http://localhost:9090
+
+grafana
+http://localhost:3000
+
+
+
+--------
+
+

@@ -21,6 +21,11 @@ services:
     volumes:
       - C:\Users\chris\Desktop\CMS Docker\CMS Docker Teste IBM MQ\data:/mnt/mqm
 
+
+
+
+
+
   # worker-mq-server:
   #   hostname: "mq"
   #   #container_name: worker-mq-server

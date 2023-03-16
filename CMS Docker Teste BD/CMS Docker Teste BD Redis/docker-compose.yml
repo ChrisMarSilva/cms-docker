@@ -14,6 +14,7 @@ services:
     ports:
       - 6379:6379
     command: redis-server --requirepass 123 --appendonly yes
+    # command: redis-server --requirepass Redis2019!
     # command: redis-server --appendonly yes
     environment:
       - REDIS_REPLICATION_MODE=master

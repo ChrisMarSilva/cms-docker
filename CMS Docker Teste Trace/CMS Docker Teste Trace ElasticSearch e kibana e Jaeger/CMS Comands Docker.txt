@@ -1,0 +1,26 @@
+
+
+cd 'C:\Users\chris\Desktop\CMS Docker\CMS Docker Teste Trace\CMS Docker Teste Trace ElasticSearch e kibana e Jaeger'
+
+docker-compose down
+docker-compose up -d --build
+
+
+docker-compose down
+docker-compose up -d 
+
+elasticsearch
+http://localhost:9200
+
+kibana
+http://localhost:5601
+
+jaeger
+http://localhost:16686/search
+
+
+
+
+--------
+
+
