@@ -10,7 +10,8 @@ docker-compose up -d --build
 --------------------------------------------------------------------
 --------------------------------------------------------------------
 
-docker run -d --hostname rabbitmq --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.11-management
+docker run -d --hostname rabbitmq --name rabbitmq -p 5672:5672 -p 15672:15672 -e RABBITMQ_DEFAULT_USER=guest -e RABBITMQ_DEFAULT_PASS=guest -v "./.docker/rabbitmq/etc/:/etc/rabbitmq/" -v "./.docker/rabbitmq/data/:/var/lib/rabbitmq/" -v "./.docker/rabbitmq/logs/:/var/log/rabbitmq/" rabbitmq:3.11.23-management
+
 
 http://localhost:15672
 User: guest

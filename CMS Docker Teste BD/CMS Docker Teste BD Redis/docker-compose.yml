@@ -1,9 +1,5 @@
 version: "3.9"
 
-# networks:
-#   cms-tnb-redis:
-#     driver: bridge
-
 services:
 
   redis:
@@ -13,28 +9,31 @@ services:
     restart: always
     ports:
       - 6379:6379
-    command: redis-server --requirepass 123 --appendonly yes
-    # command: redis-server --requirepass Redis2019!
-    # command: redis-server --appendonly yes
-    environment:
-      - REDIS_REPLICATION_MODE=master
+    command: redis-server --requirepass 123 --appendonly yes --save 20 1 --loglevel warning
     volumes:
       - ./data/:/data
+    # environment:
+    #   - REDIS_REPLICATION_MODE=master
     # networks:
     #   - cms-tnb-redis
 
-  # redis-commander:
-  #   container_name: redis-ui
-  #   image: rediscommander/redis-commander:latest
-  #   restart: always
-  #   environment:
-  #     - REDIS_HOSTS=local:localhost:6379 # redis # localhost
-  #     - REDIS_PASSWORD=123
-  #     - HTTP_USER=admin
-  #     - HTTP_PASSWORD=admin
-  #   ports:
-  #     - 8082:8081
-  #   depends_on:
-  #     - redis
+  redis-commander:
+    container_name: redis-commander
+    hostname: redis-commander
+    image: rediscommander/redis-commander:latest
+    restart: always
+    environment:
+      - HTTP_USER=admin
+      - HTTP_PASSWORD=admin
+      - REDIS_HOSTS=local:localhost:6379 # redis # localhost # 127.0.0.1
+      - REDIS_PASSWORD=123
+    ports:
+      - 8082:8081
+    depends_on:
+      - redis
     # networks:
     #   - cms-tnb-redis
+
+# networks:
+#   cms-tnb-redis:
+#     driver: bridge
