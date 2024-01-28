@@ -11,3 +11,5 @@ docker-compose up -d --build
 docker-compose down
 docker-compose up -d
 
+docker run -d -p 6379:6379 -e ALLOW_EMPTY_PASSWORD=yes --name redis redis:latest
+

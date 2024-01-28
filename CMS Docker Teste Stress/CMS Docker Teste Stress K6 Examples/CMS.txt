@@ -1,0 +1,523 @@
+
+
+https://github.com/grafana/k6/blob/master/examples/
+
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
+
+
+/logging.js
+
+export default function() {
+	console.log("log", "a", "b");
+	console.debug("debug", "a", "b");
+	console.info("info", "a", "b");
+	console.warn("warn", "a", "b");
+	console.error("error", "a", "b");
+}
+
+
+jwt.js
+
+
+import crypto from "k6/crypto";
+import encoding from "k6/encoding";
+import {sleep} from "k6";
+
+const algToHash = {
+    HS256: "sha256",
+    HS384: "sha384",
+    HS512: "sha512"
+};
+
+function sign(data, hashAlg, secret) {
+    let hasher = crypto.createHMAC(hashAlg, secret);
+    hasher.update(data);
+
+    // Some manual base64 rawurl encoding as `Hasher.digest(encodingType)`
+    // doesn't support that encoding type yet.
+    return hasher.digest("base64").replace(/\//g, "_").replace(/\+/g, "-").replace(/=/g, "");
+}
+
+function encode(payload, secret, algorithm) {
+    algorithm = algorithm || "HS256";
+    let header = encoding.b64encode(JSON.stringify({ typ: "JWT", alg: algorithm }), "rawurl");
+    payload = encoding.b64encode(JSON.stringify(payload), "rawurl", "s");
+    let sig = sign(header + "." + payload, algToHash[algorithm], secret);
+    return [header, payload, sig].join(".");
+}
+
+function decode(token, secret, algorithm) {
+    let parts = token.split('.');
+    let header = JSON.parse(encoding.b64decode(parts[0], "rawurl", "s"));
+    let payload = JSON.parse(encoding.b64decode(parts[1], "rawurl", "s"));
+    algorithm = algorithm || algToHash[header.alg];
+    if (sign(parts[0] + "." + parts[1], algorithm, secret) != parts[2]) {
+        throw Error("JWT signature verification failed");
+    }
+    return payload;
+}
+
+export default function() {
+    let message = { key2: "value2" };
+    let token = encode(message, "secret");
+    console.log("encoded", token);
+    let payload = decode(token, "secret");
+    console.log("decoded", JSON.stringify(payload));
+    sleep(1)
+}
+
+
+
+http_basic_auth.js
+
+
+import encoding from "k6/encoding";
+import http from "k6/http";
+import { check } from "k6";
+
+export default function() {
+    // Passing username and password as part of URL will authenticate using HTTP Basic Auth
+    let res = http.get("http://user:passwd@httpbin.org/basic-auth/user/passwd");
+
+    // Verify response
+    check(res, {
+        "status is 200": (r) => r.status === 200,
+        "is authenticated": (r) => r.json().authenticated === true,
+        "is correct user": (r) => r.json().user === "user"
+    });
+
+    // Alternatively you can create the header yourself to authenticate using HTTP Basic Auth
+    res = http.get("http://httpbin.org/basic-auth/user/passwd", { headers: { "Authorization": "Basic " + encoding.b64encode("user:passwd") }});
+
+    // Verify response
+    check(res, {
+        "status is 200": (r) => r.status === 200,
+        "is authenticated": (r) => r.json().authenticated === true,
+        "is correct user": (r) => r.json().user === "user"
+    });
+}
+
+
+custom_metrics.js
+
+
+import http from "k6/http";
+import { Counter, Gauge, Rate, Trend } from "k6/metrics";
+import { check } from "k6";
+
+/*
+ * Custom metrics are useful when you want to track something that is not
+ * provided out of the box.
+ *
+ * There are four types of custom metrics: Counter, Gauge, Rate and Trend.
+ *
+ * - Counter: a sum of all values added to the metric
+ * - Gauge: a value that change to whatever you set it to
+ * - Rate: rate of "truthiness", how many values out of total are !=0
+ * - Trend: time series, all values are recorded, statistics can be calculated
+ *          on it
+ */
+
+let myCounter = new Counter("my_counter");
+let myGauge = new Gauge("my_gauge");
+let myRate = new Rate("my_rate");
+let myTrend = new Trend("my_trend");
+
+let maxResponseTime = 0.0;
+
+export default function () {
+    let res = http.get("http://httpbin.org/");
+    let passed = check(res, { "status is 200": (r) => r.status === 200 });
+
+    // Add one for number of requests
+    myCounter.add(1);
+    console.log(myCounter.name, " is config ready")
+
+    // Set max response time seen
+    maxResponseTime = Math.max(maxResponseTime, res.timings.duration);
+    myGauge.add(maxResponseTime);
+
+    // Add check success or failure to keep track of rate
+    myRate.add(passed);
+
+    // Keep track of TCP-connecting and TLS handshaking part of the response time
+    myTrend.add(res.timings.connecting + res.timings.tls_handshaking);
+}
+
+
+crypto.js
+
+import crypto from 'k6/crypto';
+
+export default function() {
+    // Shorthand API
+    let hash = crypto.sha1("some text", "hex");
+    console.log(hash);
+
+    // Flexible API
+    let hasher = crypto.createHash("sha1")
+    hasher.update("some other text")
+    console.log(hasher.digest("hex"))
+    console.log(hasher.digest("base64"))
+}
+
+
+
+cookies.js
+
+import http from "k6/http";
+import { check, group } from "k6";
+
+export let options = {
+    maxRedirects: 3
+};
+
+export default function() {
+    // VU cookie jar
+    group("Simple cookies send with VU jar", function() {
+        let cookies = {
+            name: "value1",
+            name2: "value2"
+        };
+        let res = http.get("http://httpbin.org/cookies", { cookies: cookies });
+        check(res, {
+            "status is 200": (r) => r.status === 200,
+            "has cookie 'name'": (r) => r.json().cookies.name.length > 0,
+            "has cookie 'name2'": (r) => r.json().cookies.name2.length > 0
+        });
+
+        // Since the cookies are set as "request cookies" they won't be added to VU cookie jar
+        let vuJar = http.cookieJar();
+        let cookiesForURL = vuJar.cookiesForURL(res.url);
+        check(null, {
+            "vu jar doesn't have cookie 'name'": () => cookiesForURL.name === undefined,
+            "vu jar doesn't have cookie 'name2'": () => cookiesForURL.name2 === undefined
+        });
+    });
+
+    group("Simple cookies set with VU jar", function() {
+        // Since this request redirects the `res.cookies` property won't contain the cookies
+        let res = http.get("http://httpbin.org/cookies/set?name3=value3&name4=value4");
+        check(res, {
+            "status is 200": (r) => r.status === 200
+        });
+
+        // Make sure cookies have been added to VU cookie jar
+        let vuJar = http.cookieJar();
+        let cookiesForURL = vuJar.cookiesForURL(res.url);
+        check(null, {
+            "vu jar has cookie 'name3'": () => cookiesForURL.name3.length > 0,
+            "vu jar has cookie 'name4'": () => cookiesForURL.name4.length > 0
+        });
+    });
+
+    // Local cookie jar
+    group("Simple cookies send with local jar", function() {
+        let jar = new http.CookieJar();
+        let cookies = {
+            name5: "value5",
+            name6: "value6"
+        };
+        let res = http.get("http://httpbin.org/cookies", { cookies: cookies, jar: jar });
+        check(res, {
+            "status is 200": (r) => r.status === 200,
+            "has cookie 'name5'": (r) => r.json().cookies.name5.length > 0,
+            "has cookie 'name6'": (r) => r.json().cookies.name6.length > 0
+        });
+
+        // Since the cookies are set as "request cookies" they won't be added to VU cookie jar
+        let cookiesForURL = jar.cookiesForURL(res.url);
+        check(null, {
+            "local jar doesn't have cookie 'name5'": () => cookiesForURL.name5 === undefined,
+            "local jar doesn't have cookie 'name6'": () => cookiesForURL.name6 === undefined
+        });
+
+        // Make sure cookies have NOT been added to VU cookie jar
+        let vuJar = http.cookieJar();
+        cookiesForURL = vuJar.cookiesForURL(res.url);
+        check(null, {
+            "vu jar doesn't have cookie 'name5'": () => cookiesForURL.name === undefined,
+            "vu jar doesn't have cookie 'name6'": () => cookiesForURL.name2 === undefined
+        });
+    });
+
+    group("Advanced send with local jar", function() {
+        let jar = new http.CookieJar();
+        jar.set("http://httpbin.org/cookies", "name7", "value7");
+        jar.set("http://httpbin.org/cookies", "name8", "value8");
+        let res = http.get("http://httpbin.org/cookies", { jar: jar });
+        let cookiesForURL = jar.cookiesForURL(res.url);
+        check(res, {
+            "status is 200": (r) => r.status === 200,
+            "has cookie 'name7'": (r) => r.json().cookies.name7.length > 0,
+            "has cookie 'name8'": (r) => r.json().cookies.name8.length > 0
+        });
+
+        cookiesForURL = jar.cookiesForURL(res.url);
+        check(null, {
+            "local jar has cookie 'name7'": () => cookiesForURL.name7.length > 0,
+            "local jar has cookie 'name8'": () => cookiesForURL.name8.length > 0
+        });
+
+        // Make sure cookies have NOT been added to VU cookie jar
+        let vuJar = http.cookieJar();
+        cookiesForURL = vuJar.cookiesForURL(res.url);
+        check(null, {
+            "vu jar doesn't have cookie 'name7'": () => cookiesForURL.name7 === undefined,
+            "vu jar doesn't have cookie 'name8'": () => cookiesForURL.name8 === undefined
+        });
+    });
+
+    group("Advanced cookie attributes", function() {
+        let jar = http.cookieJar();
+        jar.set("http://httpbin.org/cookies", "name9", "value9", { domain: "httpbin.org", path: "/cookies" });
+
+        let res = http.get("http://httpbin.org/cookies", { jar: jar });
+        check(res, {
+            "status is 200": (r) => r.status === 200,
+            "has cookie 'name9'": (r) => r.json().cookies.name9 === "value9"
+        });
+
+        jar.set("http://httpbin.org/cookies", "name10", "value10", { domain: "example.com", path: "/" });
+        res = http.get("http://httpbin.org/cookies", { jar: jar });
+        check(res, {
+            "status is 200": (r) => r.status === 200,
+            "doesn't have cookie 'name10'": (r) => r.json().cookies.name10 === undefined
+        });
+    });
+}
+
+
+base64.js
+
+import { check } from "k6";
+import encoding from "k6/encoding";
+
+export default function() {
+    // Standard base64 encoding/decoding with '=' padding
+    let str = "hello world";
+    let enc = "aGVsbG8gd29ybGQ=";
+    check(null, {
+        "is std encoding correct": () => encoding.b64encode(str) === enc,
+        "is std decoding correct": () => encoding.b64decode(enc, null, "s") === str
+    });
+
+    // Standard base64 encoding/decoding without '=' padding
+    str = "hello world";
+    enc = "aGVsbG8gd29ybGQ";
+    check(null, {
+        "is rawstd encoding correct": () => encoding.b64encode(str, 'rawstd') === enc,
+        "is rawstd decoding correct": () => encoding.b64decode(enc, 'rawstd', "s") === str
+    });
+
+    // URL-safe base64 encoding/decoding with '=' padding
+    str = "小飼弾..";
+    enc = "5bCP6aO85by-Li4=";
+    check(null, {
+        "is url encoding correct": () => encoding.b64encode(str, 'url') === enc,
+        "is url decoding correct": () => encoding.b64decode(enc, 'url', "s") === str
+    });
+
+    // URL-safe base64 encoding/decoding without '=' padding
+    str = "小飼弾..";
+    enc = "5bCP6aO85by-Li4";
+    check(null, {
+        "is rawurl encoding correct": () => encoding.b64encode(str, 'rawurl') === enc,
+        "is rawurl decoding correct": () => encoding.b64decode(enc, 'rawurl', "s") === str
+    });
+};
+
+
+
+html_form_post.js
+
+import http from "k6/http";
+import { check } from "k6";
+
+// Our form data, to be URL-encoded and POSTed
+const form_data = {
+    name: "Test Name",
+    telephone: "123456789",
+    email: "test@example.com",
+    comment: "Hello world!",
+    topping: [
+        'onion',
+        'bacon',
+        'cheese'
+    ]
+};
+
+export default function() {
+    // Passing an object as the data parameter will automatically form-urlencode it
+    let res = http.post("http://httpbin.org/post", form_data);
+
+    // Verify response
+    check(res, {
+        "status is 200": (r) => r.status === 200,
+        "has correct name": (r) => r.json().form.name === form_data.name,
+        "has correct telephone number": (r) => r.json().form.telephone === form_data.telephone,
+        "has correct email": (r) => r.json().form.email === form_data.email,
+        "has correct comment": (r) => r.json().form.comment === form_data.comment,
+        "has correct toppings": (r) => JSON.stringify(r.json().form.topping) === JSON.stringify(form_data.topping)
+    });
+}
+
+
+json.js
+
+import http from "k6/http";
+import { check } from "k6";
+
+export default function() {
+    // Send a JSON encoded POST request
+    let body = JSON.stringify({ key: "value" });
+    let res = http.post("http://httpbin.org/post", body, { headers: { "Content-Type": "application/json" }});
+
+    // Use JSON.parse to deserialize the JSON (instead of using the r.json() method)
+    let j = JSON.parse(res.body);
+
+    // Verify response
+    check(res, {
+        "status is 200": (r) => r.status === 200,
+        "is key correct": (r) => j.json.key === "value",
+    });
+}
+
+
+
+localhost.js
+
+import { group, check } from "k6";
+import http from "k6/http";
+
+export let options = {
+	thresholds: {
+		'http_req_duration{kind:html}': ["avg<=10"],
+		'http_req_duration{kind:css}': ["avg<=10"],
+		'http_req_duration{kind:img}': ["avg<=100"],
+		'http_reqs': ["rate>100"],
+	}
+};
+
+export default function() {
+	group("front page", function() {
+		check(http.get("http://localhost:8080/", {
+			tags: {'kind': 'html' },
+		}), {
+			"status is 200": (res) => res.status === 200,
+		});
+	});
+	group("stylesheet", function() {
+		check(http.get("http://localhost:8080/style.css", {
+			tags: {'kind': 'css' },
+		}), {
+			"status is 200": (res) => res.status === 200,
+		});
+	});
+	group("image", function() {
+		check(http.get("http://localhost:8080/teddy.jpg", {
+			tags: {'kind': 'img' },
+		}), {
+			"status is 200": (res) => res.status === 200,
+		});
+	});
+}
+
+
+
+redirects.js
+
+import http from "k6/http";
+import {check} from "k6";
+
+export let options = {
+    // Max redirects to follow (default is 10)
+    maxRedirects: 5
+};
+
+export default function() {
+    // If redirecting more than options.maxRedirects times, the last response will be returned
+    let res = http.get("https://httpbin.org/redirect/6");
+    check(res, {
+        "is status 302": (r) => r.status === 302
+    });
+
+    // The number of redirects to follow can be controlled on a per-request level as well
+    res = http.get("https://httpbin.org/redirect/1", {redirects: 1});
+    console.log(res.status);
+    check(res, {
+        "is status 200": (r) => r.status === 200,
+        "url is correct": (r) => r.url === "https://httpbin.org/get"
+    });
+}
+
+
+websocket.js
+import ws from "k6/ws";
+import { check } from "k6";
+
+export default function () {
+    var url = "ws://echo.websocket.org";
+    var params = { "tags": { "my_tag": "hello" } };
+
+    var response = ws.connect(url, params, function (socket) {
+        socket.on('open', function open() {
+            console.log('connected');
+            socket.send(Date.now());
+
+            socket.setInterval(function timeout() {
+                socket.ping();
+                console.log("Pinging every 1sec (setInterval test)");
+            }, 1000);
+        });
+
+        socket.on('ping', function () {
+            console.log("PING!");
+        });
+
+        socket.on('pong', function () {
+            console.log("PONG!");
+        });
+
+        socket.on('pong', function () {
+            // Multiple event handlers on the same event
+            console.log("OTHER PONG!");
+        });
+
+        socket.on('message', function incoming(data) {
+            console.log(`Roundtrip time: ${Date.now() - data} ms`);
+            socket.setTimeout(function timeout() {
+                socket.send(Date.now());
+            }, 500);
+        });
+
+        socket.on('close', function close() {
+            console.log('disconnected');
+        });
+
+        socket.on('error', function (e) {
+            if (e.error() != "websocket: close sent") {
+                console.log('An unexpected error occurred: ', e.error());
+            }
+        });
+
+        socket.setTimeout(function () {
+            console.log('2 seconds passed, closing the socket');
+            socket.close();
+        }, 2000);
+    });
+
+    check(response, { "status is 101": (r) => r && r.status === 101 });
+};
+
+
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
+k6 run -index.js
+
+
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------

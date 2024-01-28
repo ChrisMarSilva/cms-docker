@@ -7,22 +7,22 @@ cd 'C:\Users\chris\Desktop\CMS Docker\CMS Docker Teste Msg\CMS Docker Teste MSG 
 docker-compose down
 docker-compose up -d --build
 
+
+Error response from daemon: Ports are not available: exposing port TCP 0.0.0.0:5672 -> 0.0.0.0:0: listen tcp 0.0.0.0:5672: bind: An attempt was made to access a socket in a way forbidden by its access permissions.
+
+//Run in PowerShell as Admin
+net stop winnat
+net start winnat
+
 --------------------------------------------------------------------
 --------------------------------------------------------------------
 
-docker run -d --hostname rabbitmq --name rabbitmq -p 5672:5672 -p 15672:15672 -e RABBITMQ_DEFAULT_USER=guest -e RABBITMQ_DEFAULT_PASS=guest -v "./.docker/rabbitmq/etc/:/etc/rabbitmq/" -v "./.docker/rabbitmq/data/:/var/lib/rabbitmq/" -v "./.docker/rabbitmq/logs/:/var/log/rabbitmq/" rabbitmq:3.11.23-management
+docker run -d --hostname rabbitmq --name rabbitmq -p 5672:5672 -p 15672:15672 -e RABBITMQ_DEFAULT_USER=guest -e RABBITMQ_DEFAULT_PASS=guest -v "./.docker/rabbitmq/etc/:/etc/rabbitmq/" -v "./.docker/rabbitmq/data/:/var/lib/rabbitmq/" -v "./.docker/rabbitmq/logs/:/var/log/rabbitmq/" rabbitmq:3.12.12-management
 
 
 http://localhost:15672
 User: guest
 Password: guest
-
---------------------------------------------------------------------
---------------------------------------------------------------------
-
-Queue    = python rabbitmqadmin declare queue --vhost=/ name=some_outgoing_queue durable=true
-Exchange = python rabbitmqadmin declare exchange --vhost=/ name=some_exchange type=direct
-Binding  = python rabbitmqadmin --vhost=/ declare binding source="some_exchange" destination_type="queue" destination="some_outgoing_queue" routing_key="some_routing_key"
 
 --------------------------------------------------------------------
 --------------------------------------------------------------------

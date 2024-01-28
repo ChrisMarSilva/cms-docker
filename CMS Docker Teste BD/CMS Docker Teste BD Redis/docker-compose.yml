@@ -1,5 +1,9 @@
 version: "3.9"
 
+# networks:
+#   cms-tnb-redis:
+#     driver: bridge
+
 services:
 
   redis:
@@ -33,7 +37,3 @@ services:
       - redis
     # networks:
     #   - cms-tnb-redis
-
-# networks:
-#   cms-tnb-redis:
-#     driver: bridge

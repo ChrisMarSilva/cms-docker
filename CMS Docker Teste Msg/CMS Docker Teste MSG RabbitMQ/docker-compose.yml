@@ -1,31 +1,25 @@
 version: "3"
 
+# networks:
+#   rabbitmq:
+#     driver: bridge
+
 services:
   rabbit:
-    image: rabbitmq:3.11.23-management  # rabbitmq:3.11-management # rabbitmq:3-management
+    image: rabbitmq:3.12.12-management
     # build:
     #   context: .
     #   dockerfile: Dockerfile
     hostname: rabbit
     container_name: rabbit
-    # labels:
-    #   NAME: "rabbitmq1"
-    command: rabbitmq-server
-    restart: always  # unless-stopped
+    #command: rabbitmq-server
+    restart: always
     ports:
       - 5672:5672 # HTTP management UI
       - 15672:15672 # The standard AMQP protocol port # communication with the web management API 
-      # - 25676:25676  
-#       - 25672:25672 # (erlang) communication between the nodes and CLI tool
-    # expose:
-    #   - 5672
-    #   - 15672
     environment:
       - RABBITMQ_DEFAULT_USER=guest
       - RABBITMQ_DEFAULT_PASS=guest
-      #- RABBITMQ_ERLANG_COOKIE=s3cr3tc00ki3
-      #- CLUSTERED=true
-      #- RABBITMQ_DEFAULT_VHOST="/"
     volumes:
       - ./.docker/rabbitmq/etc/:/etc/rabbitmq/
       - ./.docker/rabbitmq/data/:/var/lib/rabbitmq/
@@ -36,13 +30,4 @@ services:
     #   timeout: 10s
     #   retries: 3
     # networks:
-    #   - rabbitNet
     #   - rabbitmq
-    #   - network
-
-# networks:
-#   network: {}
-#   rabbitNet:
-#     driver: bridge
-#   rabbitmq:
-#     driver: bridge

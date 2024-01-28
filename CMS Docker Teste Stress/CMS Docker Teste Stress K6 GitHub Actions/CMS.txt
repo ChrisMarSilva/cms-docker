@@ -1,0 +1,180 @@
+
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+https://k6.io/blog/load-testing-using-github-actions/
+https://github.com/marketplace/actions/k6-load-test
+
+
+
+test.js
+
+
+import http from 'k6/http';
+import { sleep } from 'k6';
+
+export const options = {
+  duration: '1m',
+  vus: 50,
+  thresholds: {
+    http_req_failed: ['rate<0.01'], // http errors should be less than 1%
+    http_req_duration: ['p(95)<500'], // 95 percent of response times must be below 500ms
+  },
+};
+
+export default function () {
+  const res = http.get('https://test.k6.io');
+  sleep(1);
+}
+
+.github/workflows/load-test.yml
+
+
+
+k6_load_test:
+  name: k6 Load Test
+  runs-on: ubuntu-latest
+
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    - name: Run local k6 test
+      uses: grafana/k6-action@v0.2.0
+      with:
+        filename: test.js
+        cloud: true
+        token: ${{ secrets.K6_CLOUD_API_TOKEN }}
+
+
+extension/script.js
+
+import counter from 'k6/x/counter';
+
+export const options = {
+  vus: 10,
+  duration: '5s',
+};
+
+export default function () {
+  console.log(counter.up(), __VU, __ITER);
+}
+
+
+
+.github/workflows/k6_extension.yml
+
+
+on: [push]
+
+jobs:
+  k6_local_test:
+    name: k6 counter extension run
+    runs-on: ubuntu-latest
+    container: docker://golang:1.17-alpine
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Install xk6
+        run: go install go.k6.io/xk6/cmd/xk6@latest
+
+      - name: Build xk6-counter binary
+        run: xk6 build --with github.com/mstoykov/xk6-counter@latest
+
+      - name: Run k6 extension test
+        run: ./k6 run extension/script.js
+
+
+.github/workflows/load-test.yml
+
+
+on: [push]
+
+jobs:
+  k6_load_test:
+    name: k6 Load Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Run local k6 test
+        uses: grafana/k6-action@v0.2.0
+        with:
+          filename: test.js
+          flags: --out json=results.json
+
+      - name: Upload performance test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: k6-report
+          path: results.json
+
+
+summary-test.js
+
+import { sleep } from 'k6';
+import http from 'k6/http';
+import { textSummary } from 'https://jslib.k6.io/k6-summary/0.0.1/index.js';
+
+export const options = {
+  duration: '.5m',
+  vus: 5,
+  iterations: 10,
+  thresholds: {
+    http_req_failed: ['rate<0.01'], // http errors should be less than 1%
+    http_req_duration: ['p(95)<500'], // 95 percent of response times must be below 500ms
+  },
+};
+
+export default function () {
+  http.get('http://test.k6.io/contacts.php');
+  sleep(3);
+}
+
+export function handleSummary(data) {
+  console.log('Finished executing performance tests');
+
+  return {
+    'stdout': textSummary(data, { indent: ' ', enableColors: true }), // Show the text summary to stdout...
+    'summary.json': JSON.stringify(data), // and a JSON with all the details...
+  };
+}
+
+
+.github/workflows/k6_summary.yml
+
+name: Summary Workflow
+on: [push]
+
+jobs:
+  k6_local_test:
+    name: k6 local test run - summary example
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Run local k6 test
+        uses: grafana/k6-action@v0.2.0
+        with:
+          filename: src/summary_test.js
+
+      - name: Store performance test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: k6-summary-report
+          path: summary.json
+
+
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
+k6 run -index.js
+
+
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
