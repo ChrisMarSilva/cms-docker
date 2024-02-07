@@ -6,10 +6,8 @@ docker-compose up -d --build --force-recreate
 
 docker-compose down
 docker-compose up -d --build
-
-
-docker-compose down
 docker-compose up -d
 
-docker run -d -p 6379:6379 -e ALLOW_EMPTY_PASSWORD=yes --name redis redis:latest
+docker run --name redis --hostname redis -v ./data/:/data -p 6379:6379 -d -e ALLOW_EMPTY_PASSWORD=yes redis:latest
+docker run --name redis --hostname redis -v ./data/:/data -p 6379:6379 -d -e ALLOW_EMPTY_PASSWORD=yes redis/redis-stack-server:latest
 
