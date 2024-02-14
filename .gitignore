@@ -618,7 +618,7 @@ CMS Docker Teste Trace/CMS Docker Teste Trace Elastic/elk-8-0-0/data/
 CMS Docker Teste Trace/CMS Docker Teste Trace Elastic/elk-8-0-1/data/
 CMS Docker Teste Trace/CMS Docker Teste Trace Elastic/elk-8-0-1 - Old/data/
 
-CMS Docker Teste BD/CMS Docker Teste BD Postgres/elk-7-6-2/data/
+CMS Docker Teste BD/CMS Docker Teste BD Postgres/data/
 
 *.exe
 *docker-compose-secret.yml
