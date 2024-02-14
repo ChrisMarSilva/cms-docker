@@ -9,11 +9,12 @@ services:
       POSTGRES_PASSWORD: postgres # secret
       POSTGRES_USER: postgres # root
       POSTGRES_DB: postgres # authServer
+      #POSTGRES_MULTIPLE_DATABASES: db1,db2
     ports:
       - "5432:5432"
     volumes:
+      #- ./script.sql:/docker-entrypoint-initdb.d/script.sql
       - ./data:/var/lib/postgresql/data
-      - ./script.sql:/docker-entrypoint-initdb.d/script.sql
 
       # adminer:
       #   image: adminer

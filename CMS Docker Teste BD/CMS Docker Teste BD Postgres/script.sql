@@ -12,21 +12,20 @@ CREATE TABLE cliente_transacao (
   valor INTEGER NOT NULL,
   tipo CHAR(1) NOT NULL,
   descricao VARCHAR(10) NOT NULL,
-  dthrregistro TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, -- NOW()
-  FOREIGN fk_transacao_to_cliente KEY(cliente_id) REFERENCES cliente(id)
+  dthrregistro TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_transacao_to_cliente FOREIGN KEY(cliente_id) REFERENCES cliente(id)
 );
 
 CREATE INDEX idx_transacoes_id_desc ON cliente_transacao(id desc);
---CREATE INDEX idx_transacoes_cliente ON cliente_transacao USING btree (cliente_id);
 
 CREATE TABLE cliente_saldo  (
 	id SERIAL PRIMARY KEY,
 	cliente_id INTEGER NOT NULL,
 	total INTEGER NOT NULL,
-  FOREIGN fk_transacao_to_saldo KEY(cliente_id) REFERENCES cliente(id)
+  CONSTRAINT fk_transacao_to_saldo FOREIGN KEY(cliente_id) REFERENCES cliente(id)
 );
 
-CREATE UNIQUE INDEX idx_saldos_id ON saldos (cliente_id) include (valor);
+CREATE UNIQUE INDEX idx_saldo_cliente ON cliente_saldo (cliente_id) include (valor);
 
 DO $$
 BEGIN
