@@ -4,17 +4,25 @@ services:
 
   postgres:
     image:  postgres:latest # postgres:14beta2-alpine3.14
-    restart: unless-stopped # always
+    restart: unless-stopped
+    #hostname: db
     environment:
-      POSTGRES_PASSWORD: postgres # secret
-      POSTGRES_USER: postgres # root
-      POSTGRES_DB: postgres # authServer
-      #POSTGRES_MULTIPLE_DATABASES: db1,db2
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
     ports:
       - "5432:5432"
     volumes:
-      #- ./script.sql:/docker-entrypoint-initdb.d/script.sql
+      - ./script.sql:/docker-entrypoint-initdb.d/script.sql
+      - ./postgres.conf:/etc/postgresql/postgresql.conf
       - ./data:/var/lib/postgresql/data
+    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
+    # network_mode: host
+    # deploy:
+      # resources:
+        # limits:
+          # cpus: "0.8"
+          # memory: "2.5GB"
 
       # adminer:
       #   image: adminer

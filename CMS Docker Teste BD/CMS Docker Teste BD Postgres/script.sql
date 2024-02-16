@@ -25,7 +25,7 @@ CREATE TABLE cliente_saldo  (
   CONSTRAINT fk_transacao_to_saldo FOREIGN KEY(cliente_id) REFERENCES cliente(id)
 );
 
-CREATE UNIQUE INDEX idx_saldo_cliente ON cliente_saldo (cliente_id) include (valor);
+CREATE UNIQUE INDEX idx_saldo_cliente ON cliente_saldo (cliente_id) include (total);
 
 DO $$
 BEGIN
