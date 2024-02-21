@@ -3,25 +3,21 @@ package main
 import (
 	"log"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 // go mod init github.com/ChrisMarSilva/cms.golang.teste.api.fiber
-// go get -u github.com/gofiber/fiber/v2
+// go get -u github.com/gofiber/fiber/v3
+// go get -u github.com/cosmtrek/air
 // go mod tidy
 
+// air -c .air.toml
+// air server --port 8080
+
 // go run main.go
-// go build main.go
 
 func main() {
-
-	//app := fiber.New()
-
-	app := fiber.New(fiber.Config{
-		Prefork:      false, // doesn't run on docker even after following steps from https://docs.gofiber.io/api/fiber
-		ServerHeader: "Fiber",
-		AppName:      "Benchmark App",
-	})
+	app := fiber.New()
 
 	app.Get("/", handler)
 
@@ -29,6 +25,6 @@ func main() {
 	log.Fatal(app.Listen(":7004"))
 }
 
-func handler(c *fiber.Ctx) error {
+func handler(c fiber.Ctx) error {
 	return c.SendString("golang api 04.Fiber ok")
 }
