@@ -37,7 +37,38 @@ CMD ["./main"]
 
 
 
+# ## Build
+# FROM golang:1.16-buster AS build
+# WORKDIR /app
+# COPY go.mod .
+# COPY go.sum .
+# RUN go mod download
+# COPY *.go ./
+# RUN go build -o /docker-gs-ping
 
+# ## Deploy
+# FROM gcr.io/distroless/base-debian10
+# WORKDIR /
+# COPY --from=build /docker-gs-ping /docker-gs-ping
+# EXPOSE 8080
+# USER nonroot:nonroot
+# ENTRYPOINT ["/docker-gs-ping"]
+
+
+
+# FROM golang:1.13-alpine as builder
+# ENV GOPATH="$HOME/go"
+# RUN apk --no-cache add git
+# WORKDIR $GOPATH/src
+# COPY . $GOPATH/src
+# RUN go get -d -v golang.org/x/net/html
+# RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app consumer/*.go
+
+# FROM alpine:latest
+# RUN apk --no-cache add ca-certificates
+# WORKDIR /root/
+# COPY --from=builder $HOME/go/src/app .
+# CMD ["./app"]  
 
 
 # FROM golang:1.16.5 AS development
