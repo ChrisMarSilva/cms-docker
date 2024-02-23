@@ -1,0 +1,41 @@
+
+version: "2"
+
+# cloud:
+#   project: "01HQ9MPWSJ6RNA5PENC38X293Y"
+
+sql:
+  - engine: "postgresql"
+    queries: "query.sql"
+    schema: "schema.sql"
+    database:
+      #managed: true
+      uri: "postgres://admin:123@localhost:5432/rinha"
+    gen:
+      go:
+        #package: "tutorial"
+        #out: "tutorial"
+        package: "db"
+        out: "db"
+        sql_package: "pgx/v5"
+
+# sql:
+  # - engine: "mysql"
+  #   queries: "query.sql"
+  #   schema: "schema.sql"
+  #   gen:
+  #     go:
+  #       package: "tutorial"
+  #       out: "tutorial"
+
+# sql:
+  # - engine: "sqlite"
+  #   queries: "query.sql"
+  #   schema: "schema.sql"
+  #   gen:
+  #     go:
+  #       package: "tutorial"
+  #       out: "tutorial"
+
+
+
