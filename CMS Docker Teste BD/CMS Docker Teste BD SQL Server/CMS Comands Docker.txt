@@ -13,8 +13,10 @@ ERRO  docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=sa123' -p 1433:1433 --name d
 OK    docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Hello123#" --name "sql1" -p 5401:1433 -v sql1data:/var/opt/mssql -d mcr.microsoft.com/mssql/server:2019-latest
 OK    127.0.0.1,5401
 
-OK    docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Hello123#" --name "sql2" -p 5402:1433 --hostname sql2 -v sql2data:/var/opt/mssql -d mcr.microsoft.com/mssql/server:2022-latest
+OK    docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Hello123#" --name sql2 -p 5402:1433 --hostname sql2 -v sql2data:/var/opt/mssql -d mcr.microsoft.com/mssql/server:2022-latest
+      docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Hello123#" --name sql2 -p 1433:1433 --hostname sql2 -v sql2data:/var/opt/mssql -d mcr.microsoft.com/mssql/server:2022-latest
 OK    127.0.0.1,5402
+
 
 
 
