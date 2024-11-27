@@ -14,6 +14,7 @@ docker-compose up -d
 
 
 netstat -a -n -o | findstr :8081 | findstr LISTENING
+netstat -a -n -o | findstr :27017 | findstr LISTENING
 
 
 
@@ -21,6 +22,11 @@ net stop winnat
 docker start container_name
 net start winnat
 
+Name                            | Default         | Description
+--------------------------------|-----------------|------------
+ME_CONFIG_MONGODB_AUTH_DATABASE | 'db'            | Database name
+ME_CONFIG_MONGODB_AUTH_USERNAME | 'admin'         | Database username
+ME_CONFIG_MONGODB_AUTH_PASSWORD | 'pass'          | Database password
 
 
 docker pull tutum/mongodb
