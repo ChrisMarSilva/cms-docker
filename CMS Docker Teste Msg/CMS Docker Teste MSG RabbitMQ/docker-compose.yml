@@ -1,35 +1,17 @@
-version: "3.9"
-
 services:
-  rabbit:
-    image: rabbitmq:3.13-management # rabbitmq:3.12.12-management
-    # build:
-    #   context: .
-    #   dockerfile: Dockerfile
+  rabbitmq:
+    image: rabbitmq:4.0.5-management
     hostname: rabbit
     container_name: rabbit
-    labels:
-      NAME: rabbitmq
-    #command: rabbitmq-server
     restart: always
     ports:
       - 5672:5672 # HTTP management UI
       - 15672:15672 # The standard AMQP protocol port # communication with the web management API
+      # - 25672:25672 # (erlang) communication between the nodes and CLI tool
     environment:
-      - RABBITMQ_DEFAULT_USER=guest #rabbitmq
-      - RABBITMQ_DEFAULT_PASS=guest #rabbitmq
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
     volumes:
       - ./.docker/rabbitmq/etc/:/etc/rabbitmq/
       - ./.docker/rabbitmq/data/:/var/lib/rabbitmq/
       - ./.docker/rabbitmq/logs/:/var/log/rabbitmq/
-    # healthcheck:
-    #   test: [ "CMD", "nc", "-z", "localhost", "15672" ]
-    #   test: ["CMD", "rabbitmqctl", "status"]
-    #   interval: 10s
-    #   timeout: 5s
-    #   retries: 3
-    # networks:
-    #   - rabbitmq
-# networks:
-#   rabbitmq:
-#     driver: bridge
