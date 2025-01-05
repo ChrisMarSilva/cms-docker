@@ -16,6 +16,8 @@ net start winnat
 --------------------------------------------------------------------
 --------------------------------------------------------------------
 
+docker run -d --hostname rabbitmq --name rabbitmq rabbitmq:4.0.5
+docker run -d --hostname rabbitmq --name rabbitmq -e RABBITMQ_DEFAULT_USER=guest -e RABBITMQ_DEFAULT_PASS=guest rabbitmq:4.0.5-management
 docker run -it --rm -d --hostname rabbitmq --name rabbitmq -p 5672:5672 -p 15672:15672 -e RABBITMQ_DEFAULT_USER=guest -e RABBITMQ_DEFAULT_PASS=guest -v "./.docker/rabbitmq/etc/:/etc/rabbitmq/" -v "./.docker/rabbitmq/data/:/var/lib/rabbitmq/" -v "./.docker/rabbitmq/logs/:/var/log/rabbitmq/" rabbitmq:4.0.5-management
 
 http://localhost:15672
